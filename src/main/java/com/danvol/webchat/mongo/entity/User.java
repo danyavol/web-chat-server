@@ -1,5 +1,6 @@
 package com.danvol.webchat.mongo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -11,9 +12,8 @@ import javax.persistence.Entity;
 @Document(collection = "users")
 @Data
 public class User {
-    @Id private Integer id;
+    @Id private String userId;
     private String name;
     private String login;
     private String password;
-
 }

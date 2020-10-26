@@ -1,0 +1,43 @@
+- Создать нового пользователя           POST /users/new
+(Send - login, password, name;     Receive - User); // userId сохранить в куки для последующих запросов
+
+- Авторизовать пользователя             POST /user/auth
+(Send - login, password;     Receive - User); // userId сохранить в куки для последующих запросов
+
+- Изменить существующего пользователя   PUT /users/change
+(Send - userId, anyUserData;     Receive - );
+
+- Удалить пользователя                  DELETE /users/delete
+(Send - userId;     Receive - );
+
+- Найти пользователей                   GET /users/findAll
+(Send - query(login or name);     Receive - UserDto[]); // UserDto = только login и name пользователей. Пустое query вернет всех пользователей
+
+- Получить одного пользователя          GET /users/getOne
+(Send - login;     Receive - UserDto); // UserDto = только login и name пользователя
+
+
+
+
+
+
+- Получить список чатов                 GET /chats/getAll
+(Send - userId;     Receive - ChatDto[]); // ChatDto = вместо id собеседника возвращать его name и login. Возвращать только последнее сообщение
+
+- Получить список сообщений чата        GET /chats/getOne
+(Send - userId, chatId;     Receive - MsgDto[]); // MsgDto = вместо id отправителя возвращать name и login
+
+- Создать чат                           POST /chats/new
+(Send - login(собеседника);     Receive - chatId);
+
+- Удалить чат                           DELETE /chats/delete
+(Send - userId, chatId;     Receive - );
+
+
+
+
+- Отправить сообщение                   POST /msg/new
+(Send - userId, chatId, msgText;     Receive - msgId);
+
+- Удалить сообщение                     DELETE /msg/delete
+(Send - userId, chatId, msgId;     Receive - );

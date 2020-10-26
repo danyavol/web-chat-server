@@ -1,0 +1,30 @@
+Collection - users:
+[
+    {
+        userId: "32af24c7",
+        name: "Даниил",
+        login: "danvol",
+        password: "dan1234"
+    },
+    { ... }
+]
+
+
+
+Collection - chats:
+[
+    {
+        chatId: "98c2a83c",
+        users: ["32af24c7", "55b12c20"],
+        messages: [
+            {
+                messageId: "13d1f84a"
+                messageText: "Добрый вечер, Даниил. У меня к Вам деловое предложение..",
+                sender: "32af24c7",
+                sendTime: Date
+            },
+            { ... }
+        ]
+    },
+    { ... }
+]
