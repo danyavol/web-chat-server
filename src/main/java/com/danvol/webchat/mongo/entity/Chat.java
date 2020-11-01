@@ -13,5 +13,5 @@ import java.util.List;
 public class Chat {
     @Id private String chatId;
     private List<Message> messages;
-    private List<User> users;
+    private List<String> users;
 }

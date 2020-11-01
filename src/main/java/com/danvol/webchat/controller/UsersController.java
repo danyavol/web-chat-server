@@ -12,22 +12,53 @@ public class UsersController {
 
     @Autowired private UsersService usersService;
 
-    // Save new user
-    @PostMapping("/save")
-    public User saveUser(@RequestBody User userData) throws ValidationException {
-        return usersService.saveUser(userData);
+    // Создать нового пользователя
+    @PostMapping("/new")
+    public User createUser(@RequestBody User userData) throws ValidationException {
+        // input: login, password, name
+        // validation: login is unique
+        // output: userId
+        return usersService.createUser(userData);
     }
 
-    // Update existing user
-    @PostMapping("/update")
-    public User updateUser(@RequestBody User userData) {
-        return userData;
+    // Авторизация пользователя
+    @PostMapping("/auth")
+    public User authUser(@RequestBody User userData) {
+        // input: login, password
+        // output: userId
+        return usersService.authUser(userData);
     }
 
-    // Delete existing user
-    @PostMapping("/delete")
+    // Изменить существующего пользователя
+    @PutMapping("/edit")
+    public User editUser(@RequestBody User userData) {
+        // input: userId
+        // output:
+        return usersService.editUser(userData);
+    }
+
+    // Изменить существующего пользователя
+    @DeleteMapping("/delete")
     public User deleteUser(@RequestBody User userData) {
-        return userData;
+        // input: userId
+        // output:
+        return usersService.deleteUser(userData);
+    }
+
+    // Вернуть данные одного пользователя
+    @GetMapping("/get")
+    public User getUser(@RequestBody User userData) {
+        // input: login
+        // output: name
+        return usersService.getUser(userData);
+    }
+
+    // Найти пользователей
+    @GetMapping("/find")
+    public User findUsers(@RequestBody User userData) {
+        // input: login, name or nothing
+        // output: [{login, name}, ...] or []
+        return usersService.findUsers(userData);
     }
 
 }
