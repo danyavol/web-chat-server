@@ -13,7 +13,9 @@
     "bootstrap-vue": "^2.18.0",
     "core-js": "^3.6.5",
     "portal-vue": "^2.1.7",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "vue-popperjs": "^2.3.0",
+    "vue-router": "^3.4.8"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
