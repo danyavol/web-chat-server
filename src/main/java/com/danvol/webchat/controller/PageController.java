@@ -12,8 +12,8 @@ public class PageController {
 //        modelAndView.setViewName("test.html");
 //        return modelAndView;
 //    }
-    @GetMapping("/")
-    public String openHomePage() {
-        return "../../webapp/dist/index";
-    }
+//    @GetMapping("/")
+//    public String openHomePage() {
+//        return "../../webapp/dist/index";
+//    }
 }

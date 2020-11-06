@@ -1,21 +1,20 @@
 package com.danvol.webchat.service;
 
-import com.danvol.webchat.exception.ValidationException;
 import com.danvol.webchat.mongo.entity.User;
-import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
 
-@Service
+
 public interface UsersService {
 
-    User createUser(User userData);
+    ResponseEntity createUser(User userData);
 
-    User authUser(User userData);
+    ResponseEntity authUser(String login, String password);
 
-    User editUser(User userData);
+    ResponseEntity editUser(User userData);
 
-    User deleteUser(User userData);
+    ResponseEntity deleteUser(User userData);
 
-    User getUser(User userData);
+    ResponseEntity getUser(User userData);
 
-    User findUsers(User userData);
+    ResponseEntity findUsers(User userData);
 }
