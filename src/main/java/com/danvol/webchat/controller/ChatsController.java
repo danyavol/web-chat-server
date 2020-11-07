@@ -1,24 +1,25 @@
 package com.danvol.webchat.controller;
 
-import com.danvol.webchat.mongo.entity.Chat;
 import com.danvol.webchat.service.ChatsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/chats")
 public class ChatsController {
-//    @Autowired private ChatsService chatsService;
-//
-//    // Создать новый чат
-//    @PostMapping("/new")
-//    public Chat createChat(@RequestBody Chat chatData) {
-//        // input: {creator: userId, chatMember: login}
-//        // validation: login is existing
-//        // output: chatId
-//        return chatsService.createChat(chatData);
-//    }
-//
+    @Autowired
+    private ChatsService chatsService;
+
+    // Создать новый чат
+    @PostMapping("/new")
+    public ResponseEntity createChat(@RequestParam(name = "myId") String userId, @RequestParam(name = "mateLogin") String login) {
+        // input: {creator: userId, chatMember: login}
+        // validation: login is existing
+        // output: chatId
+        return chatsService.createChat(userId, login);
+    }
+
 //    // Удалить чат
 //    @DeleteMapping("/delete")
 //    public Chat deleteChat(@RequestBody Chat chatData) {

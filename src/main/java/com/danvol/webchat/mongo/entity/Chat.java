@@ -1,10 +1,13 @@
 package com.danvol.webchat.mongo.entity;
 
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Entity;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -13,5 +16,11 @@ import java.util.List;
 public class Chat {
     @Id private String chatId;
     private List<Message> messages;
-    private List<String> users;
+    private List<ChatUser> users;
+    private @CreatedDate Date createdDate;
+
+    public Chat(List<ChatUser> users) {
+        this.users = users;
+        this.messages = new ArrayList<>();
+    }
 }

@@ -10,8 +10,14 @@ import java.util.Date;
 @Entity
 @Data
 public class Message {
-    @Id private String messageId;
+    private int messageId;
     private String messageText;
-    private Long sender;
-    private @CreatedDate Date sendTime;
+    private String sender;
+    private Date sendTime;
+
+    public Message(String sender, String messageText) {
+        this.sender = sender;
+        this.messageText = messageText;
+        this.sendTime = new Date();
+    }
 }

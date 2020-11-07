@@ -1,20 +1,20 @@
 package com.danvol.webchat.service;
 
 import com.danvol.webchat.mongo.entity.Chat;
-import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
 
-@Service
+
 public interface ChatsService {
 
-    Chat createChat(Chat chatData);
+    ResponseEntity createChat(String userId, String login);
 
-    Chat deleteChat(Chat chatData);
+//    ResponseEntity deleteChat(Chat chatData);
+//
+//    ResponseEntity getAllChats(String userId);
+//
+//    ResponseEntity getChatMessages(String userId, String chatId);
+//
+    ResponseEntity deleteMessage(String userId, String chatId, int messageId);
 
-    Chat getAllChats(Chat chatData);
-
-    Chat getChatMessages(Chat chatData);
-
-    Chat deleteMessage(Chat chatData);
-
-    Chat newMessage(Chat chatData);
+    ResponseEntity newMessage(String userId, String chatId, String message);
 }
