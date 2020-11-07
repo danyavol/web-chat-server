@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -109,12 +112,40 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public ResponseEntity getUser(User userData) {
-        return null;
+    public ResponseEntity getUser(String login) {
+        User user = usersRepository.findByLogin(login);
+        if (user == null) {
+            return new ResponseEntity<>(new RequestException("Пользователь не найден"), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new UserDto(user, "getUser"), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity findUsers(User userData) {
-        return null;
+    public ResponseEntity findUsers(String text) {
+        if (text != null) text = text.toLowerCase();
+        List<User> users = usersRepository.findAll();
+        List<UserDto> usersDto = new ArrayList<>();
+
+        for (int i = 0; i < users.size(); i++) {
+
+            if (text != null) {
+                // Поиск по логину
+                if (users.get(i).getLogin().toLowerCase().contains(text) ) {
+                    usersDto.add( new UserDto(users.get(i), "findUsers") );
+                    continue;
+                }
+                // Поиск по имени
+                if (users.get(i).getName().toLowerCase().contains(text) ) {
+                    usersDto.add( new UserDto(users.get(i), "findUsers") );
+                    continue;
+                }
+            } else {
+                // Возвращает всех пользователей
+                usersDto.add( new UserDto(users.get(i), "findUsers") );
+            }
+
+        }
+
+        return new ResponseEntity<>(usersDto, HttpStatus.OK);
     }
 }

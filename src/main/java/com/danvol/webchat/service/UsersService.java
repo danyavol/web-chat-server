@@ -14,8 +14,7 @@ public interface UsersService {
 
     ResponseEntity deleteUser(String userId);
 
+    ResponseEntity getUser(String login);
 
-    ResponseEntity getUser(User userData);
-
-    ResponseEntity findUsers(User userData);
+    ResponseEntity findUsers(String text);
 }

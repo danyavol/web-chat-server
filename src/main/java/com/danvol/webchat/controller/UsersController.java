@@ -47,21 +47,20 @@ public class UsersController {
         return usersService.deleteUser(userId);
     }
 
+    // Вернуть данные одного пользователя
+    @GetMapping("/get")
+    public ResponseEntity getUser(@RequestParam String login) {
+        // input: login
+        // output: name
+        return usersService.getUser(login);
+    }
 
-//    // Вернуть данные одного пользователя
-//    @GetMapping("/get")
-//    public ResponseEntity getUser(@RequestBody User userData) {
-//        // input: login
-//        // output: name
-//        return usersService.getUser(userData);
-//    }
-//
-//    // Найти пользователей
-//    @GetMapping("/find")
-//    public ResponseEntity findUsers(@RequestBody User userData) {
-//        // input: login, name or nothing
-//        // output: [{login, name}, ...] or []
-//        return usersService.findUsers(userData);
-//    }
+    // Найти пользователей
+    @GetMapping("/find")
+    public ResponseEntity findUsers(@RequestParam(required = false) String text) {
+        // input: login, name or nothing
+        // output: [{login, name}, ...] or []
+        return usersService.findUsers(text);
+    }
 
 }

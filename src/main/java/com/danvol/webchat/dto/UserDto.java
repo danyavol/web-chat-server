@@ -20,6 +20,9 @@ public class UserDto {
             this.userId = obj.getUserId();
             this.name = obj.getName();
             this.login = obj.getLogin();
+        } else if (type.equals("getUser") || type.equals("findUsers")) {
+            this.name = obj.getName();
+            this.login = obj.getLogin();
         }
     }
 }
