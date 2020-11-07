@@ -16,7 +16,7 @@ public class UserDto {
     private String password;
 
     public UserDto(User obj, String type) {
-        if (type == "authUser") {
+        if (type.equals("authUser") || type.equals("createUser") || type.equals("editUser")) {
             this.userId = obj.getUserId();
             this.name = obj.getName();
             this.login = obj.getLogin();

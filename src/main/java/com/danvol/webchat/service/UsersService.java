@@ -6,13 +6,14 @@ import org.springframework.http.ResponseEntity;
 
 public interface UsersService {
 
-    ResponseEntity createUser(User userData);
+    ResponseEntity createUser(String login, String password, String name);
 
     ResponseEntity authUser(String login, String password);
 
-    ResponseEntity editUser(User userData);
+    ResponseEntity editUser(String userId, String login, String password, String name);
 
-    ResponseEntity deleteUser(User userData);
+    ResponseEntity deleteUser(String userId);
+
 
     ResponseEntity getUser(User userData);
 
