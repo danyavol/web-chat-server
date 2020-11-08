@@ -9,6 +9,8 @@ public interface UsersService {
 
     ResponseEntity authUser(String login, String password);
 
+    boolean checkUserAuth(String userId);
+
     ResponseEntity editUser(String userId, String login, String password, String name);
 
     ResponseEntity deleteUser(String userId);

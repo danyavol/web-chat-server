@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/msg")
+@CrossOrigin
 public class MessagesController {
     @Autowired private ChatsService chatsService;
 

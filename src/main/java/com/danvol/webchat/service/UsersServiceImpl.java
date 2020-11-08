@@ -71,6 +71,12 @@ public class UsersServiceImpl implements UsersService {
         }
     }
 
+    @Override
+    public boolean checkUserAuth(String userId) {
+        User user = usersRepository.findByUserId(userId);
+        if (user != null) return true;
+        else return false;
+    }
 
     @Override
     public ResponseEntity editUser(String userId, String login, String password, String name) {

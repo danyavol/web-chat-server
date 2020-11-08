@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin
 public class UsersController {
     @Autowired
     private UsersService usersService;
@@ -26,6 +27,14 @@ public class UsersController {
         // input: login, password
         // output: userId, login, name
         return usersService.authUser(login, password);
+    }
+
+    // Авторизация пользователя
+    @PostMapping("/checkAuth")
+    public boolean checkUserAuth(@RequestParam String userId) {
+        // input: userId
+        // output: bool
+        return usersService.checkUserAuth(userId);
     }
 
     // Изменить существующего пользователя
