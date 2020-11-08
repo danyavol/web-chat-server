@@ -13,15 +13,18 @@
 					<button type="button" class="btn hb" id="logout">Выйти</button>
 				</div>
 			</div>
-			<div class="row flex-grow-1">
-				<ChatList class="col-4" v-bind:chatLi="chats" />
-				<Messages class="col-8" v-bind:messages="messages" />
+			<div class="row flex-grow-1 bg-light">
+				<component class="col-4" v-bind:is="secondaryComponent" @openChat="openChat" />
+<!--				<ChatList class="col-4" v-bind:chatLi="chats" />-->
+<!--				<Messages class="col-8" v-bind:messages="messages" />-->
+				<component class="col-8" v-bind:is="mainComponent" v-bind="mainProps"/>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+	import Loading from '@/components/Loading';
 	import ChatList from '@/components/ChatList';
 	import Messages from '@/components/Messages';
 	import Hamburger from '@/components/Hamburger';
@@ -30,6 +33,9 @@
 		name: 'Main',
 		data() {
 			return {
+				secondaryComponent: 'ChatList',
+				mainComponent: '',
+				mainProps: {},
 				currentPage: 'Main',
 				chats: [
 					{id:1, title: 'Заводник Владислав', time: '16:45', msg: 'Последнее очень длинное сообщение которе никак не влезет'},
@@ -61,14 +67,19 @@
 			})
 		},
 		methods: {
-			dropDown: function () {
+			dropDown () {
 				document.getElementById('hamb').classList.toggle('active');
+			},
+			openChat (data) {
+				this.mainProps = data;
+				this.mainComponent = "Messages";
 			}
 		},
 		components: {
 			ChatList,
 			Messages,
-			Hamburger
+			Hamburger,
+			Loading
 		}
 	}
 </script>

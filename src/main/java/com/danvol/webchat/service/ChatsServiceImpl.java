@@ -51,9 +51,52 @@ public class ChatsServiceImpl implements ChatsService {
             chatsRepository.save(chat);
         }
 
-        return new ResponseEntity<>(new ChatDto(chat, userB, "createChat"), HttpStatus.OK);
+        return new ResponseEntity<>(new ChatDto(chat, userB, "createChat", usersRepository), HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity getAllChats(String userId) {
+        User userA = usersRepository.findByUserId(userId);
+        if (userA == null)
+            return new ResponseEntity<>(new RequestException("Пользователь с таким id не найден"), HttpStatus.OK);
+
+        List<Chat> allChats = chatsRepository.findAll();
+        List<Chat> userChats = new ArrayList<>();
+        // Поиск нужных чатов среди всего списка
+        for (int i = 0; i < allChats.size(); i++) {
+            for (int j = 0; j < allChats.get(i).getUsers().size(); j++) {
+                if (allChats.get(i).getUsers().get(j).getUserId().equals(userId)) {
+                    userChats.add( allChats.get(i) );
+                }
+            }
+        }
+
+        List<ChatDto> userChatsDto = new ArrayList<>();
+        for (int i = 0; i < userChats.size(); i++) {
+            // Выборка айди собеседеника
+            String userBId = userChats.get(i).getUsers().get(0).getUserId();
+            if (userBId.equals(userId)) userBId = userChats.get(i).getUsers().get(1).getUserId();
+
+            // Поиск собеседника в БД
+            User userB = usersRepository.findByUserId(userBId);
+            userChatsDto.add( new ChatDto(userChats.get(i), userB, "getAllChats", usersRepository) );
+        }
+
+        return new ResponseEntity<>(userChatsDto, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity getChatMessages(String userId, String chatId) {
+        User user = usersRepository.findByUserId(userId);
+        if (user == null)
+            return new ResponseEntity<>(new RequestException("Пользователь с таким id не найден"), HttpStatus.OK);
+
+        Chat chat = chatsRepository.findByChatId(chatId);
+        if (chat == null)
+            return new ResponseEntity<>(new RequestException("Чат с таким id не найден"), HttpStatus.OK);
+
+        return new ResponseEntity<>(new ChatDto(chat, "getChatMessages", usersRepository), HttpStatus.OK);
+    }
 
     @Override
     public ResponseEntity newMessage(String userId, String chatId, String message) {

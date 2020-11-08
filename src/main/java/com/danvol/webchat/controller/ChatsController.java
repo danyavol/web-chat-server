@@ -28,20 +28,20 @@ public class ChatsController {
 //        // output:
 //        return chatsService.deleteChat(chatData);
 //    }
-//
-//    // Получить список чатов
-//    @GetMapping("/getAll")
-//    public Chat getAllChats(@RequestBody Chat chatData) {
-//        // input: userId
-//        // output: [ {chatId, login} ]
-//        return chatsService.getAllChats(chatData);
-//    }
-//
-//    // Получить список сообщений в чате
-//    @GetMapping("/getOne")
-//    public Chat getChatMessages(@RequestBody Chat chatData) {
-//        // input: userId, chatId
-//        // output:
-//        return chatsService.getChatMessages(chatData);
-//    }
+
+    // Получить список чатов
+    @GetMapping("/getAll")
+    public ResponseEntity getAllChats(@RequestParam String userId) {
+        // input: userId
+        // output: [ {chatId, login} ]
+        return chatsService.getAllChats(userId);
+    }
+
+    // Получить список сообщений в чате
+    @GetMapping("/getOne")
+    public ResponseEntity getChatMessages(@RequestParam String userId, @RequestParam String chatId) {
+        // input: userId, chatId
+        // output:
+        return chatsService.getChatMessages(userId, chatId);
+    }
 }
