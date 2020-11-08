@@ -1,5 +1,5 @@
 <template>
-	<li class="chat_item card" @click="openChat">
+	<div class="chat_item card shadow-sm" @click="openMessages">
 		<div class="card-body p-2">
 			<div class="row">
 				<div class="col-2 align-self-center">
@@ -8,13 +8,13 @@
 				<div class="col">
 					<div class="d-flex justify-content-between">
 						<p class="card-title mb-1 mate"><span>@{{data.mate.login}}</span><strong class="pl-2">{{data.mate.name}}</strong></p>
-						<p class="mb-1">{{data.messages[0] ? convertDate(data.messages[0].sendTime) : ''}}</p>
+						<p class="mb-1 text-secondary">{{data.messages[0] ? this.$root.getDate(data.messages[0].sendTime) : ''}}</p>
 					</div>
 					<p class="card-text text-truncate text-muted">{{data.messages[0] ? data.messages[0].messageText : 'Нет сообщений'}}</p>
 				</div>
 			</div>
 		</div>
-	</li>
+	</div>
 </template>
 
 <script>
@@ -23,12 +23,8 @@ export default {
 		data: Object
 	},
 	methods: {
-		convertDate(dateStr) {
-			let date = new Date(dateStr);
-			return date.getHours()+':'+date.getMinutes();
-		},
-		openChat() {
-			this.$emit('openChat', {
+		openMessages() {
+			this.$emit('openMessages', {
 				chatId: this.data.chatId,
 				mateName: this.data.mate.name,
 				mateLogin: this.data.mate.login
@@ -49,15 +45,16 @@ export default {
 	}
 
 	.avatar {
-		text-align: center;
-		padding-top: 7px;
-		display: block;
-		border-radius: 50%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		width: 40px;
 		height: 40px;
-		background: #8fd19e;
+		background: #B1E8BD;
+		border-radius: 50%;
 		color: white;
 	}
+
 
 	/*.chat_item {*/
 	/*    list-style: none;*/

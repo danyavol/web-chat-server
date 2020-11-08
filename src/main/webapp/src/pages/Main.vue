@@ -10,13 +10,15 @@
 				</div>
 				<div class="d-flex align-items-center mr-3">
 					<button type="button" class="btn hb" id="settings">Настройки</button>
-					<button type="button" class="btn hb" id="logout">Выйти</button>
+					<button type="button" class="btn hb" @click="logout">Выйти</button>
 				</div>
 			</div>
 			<div class="row flex-grow-1 bg-light">
-				<component class="col-4" v-bind:is="secondaryComponent" @openChat="openChat" />
-<!--				<ChatList class="col-4" v-bind:chatLi="chats" />-->
-<!--				<Messages class="col-8" v-bind:messages="messages" />-->
+				<component class="col-4" v-bind:is="secondaryComponent"
+					@openMessages="openMessages"
+					@openNewChat="openNewChat"
+					@openChatList="openChatList"/>
+
 				<component class="col-8" v-bind:is="mainComponent" v-bind="mainProps"/>
 			</div>
 		</div>
@@ -25,8 +27,9 @@
 
 <script>
 	import Loading from '@/components/Loading';
-	import ChatList from '@/components/ChatList';
-	import Messages from '@/components/Messages';
+	import ChatList from '@/components/ChatList/ChatList';
+	import Messages from '@/components/Messages/Messages';
+	import NewChat from '@/components/NewChat/NewChat';
 	import Hamburger from '@/components/Hamburger';
 
 	export default {
@@ -35,51 +38,36 @@
 			return {
 				secondaryComponent: 'ChatList',
 				mainComponent: '',
-				mainProps: {},
-				currentPage: 'Main',
-				chats: [
-					{id:1, title: 'Заводник Владислав', time: '16:45', msg: 'Последнее очень длинное сообщение которе никак не влезет'},
-					{id:2, title: 'Арсений Говша', time: '13:30', msg: 'Последнее очень длинное сообщение которе никак не влезет'},
-					{id:3, title: 'Китурко Роман', time: '12:25', msg: 'Последнее очень длинное сообщение которе никак не влезет'},
-					{id:4, title: 'Голомбевский Андрей', time: '18:15', msg: 'Последнее очень длинное сообщение которе никак не влезет'}
-				],
-				messages: [
-					{id: 1, isMe: true, sender: 'Даниил Волосюк', time: '16:13', msg: 'Мой большой длинный рассказ о том, как я провел лето.'},
-					{id: 2, isMe: true, sender: 'Даниил Волосюк', time: '16:11', msg: 'Сейчас кое-что расскажу'},
-					{id: 3, isMe: false, sender: 'Арсений Говша', time: '16:13', msg: 'Мой большой длинный рассказ о том, как я провел лето.'},
-					{id: 4, isMe: false, sender: 'Арсений Говша', time: '16:13', msg: 'Мой большой длинный рассказ о том, как я провел лето.Мой большой длинный рассказ о том, как я провел лето.Мой большой длинный рассказ о том, как я провел лето.'},
-					{id: 5, isMe: true, sender: 'Даниил Волосюк', time: '16:13', msg: 'Мой большой длинный рассказ о том, как я провел лето.Мой большой длинный рассказ о том, как я провел лето.Мой большой длинный рассказ о том, как я провел лето.'},
-					{id: 6, isMe: false, sender: 'Арсений Говша', time: '16:13', msg: 'Мой большой длинный рассказ о том, как я провел лето.Мой большой длинный рассказ о том, как я провел лето.Мой большой длинный рассказ о том, как я провел лето.'},
-					{id: 7, isMe: true, sender: 'Даниил Волосюк', time: '16:13', msg: 'Мой большой длинный рассказ о том, как я провел лето.Мой большой длинный рассказ о том, как я провел лето.Мой большой длинный рассказ о том, как я провел лето.'},
-					{id: 8, isMe: true, sender: 'Даниил Волосюк', time: '16:13', msg: 'Мой большой длинный рассказ о том, как я провел лето.Мой большой длинный рассказ о том, как я провел лето.Мой большой длинный рассказ о том, как я провел лето.'},
-					{id: 9, isMe: false, sender: 'Арсений Говша', time: '16:13', msg: 'Мой большой длинный рассказ о том, как я провел лето.Мой большой длинный рассказ о том, как я провел лето.Мой большой длинный рассказ о том, как я провел лето.'},
-					{id: 10, isMe: true, sender: 'Даниил Волосюк', time: '16:13', msg: 'Мой большой длинный рассказ о том, как я провел лето.Мой большой длинный рассказ о том, как я провел лето.Мой большой длинный рассказ о том, как я провел лето.'},
-				]
+				mainProps: {}
 			}
 		},
-		mounted() {
-			let logout = document.getElementById('logout');
-			logout.addEventListener('click', () => {
+		methods: {
+			logout() {
 				localStorage.removeItem('userId');
 				localStorage.removeItem('login');
 				localStorage.removeItem('name');
 				this.$router.push('/auth');
-			})
-		},
-		methods: {
-			dropDown () {
+			},
+			dropDown() {
 				document.getElementById('hamb').classList.toggle('active');
 			},
-			openChat (data) {
+			openMessages(data) {
 				this.mainProps = data;
 				this.mainComponent = "Messages";
+			},
+			openNewChat() {
+				this.secondaryComponent = "NewChat";
+			},
+			openChatList() {
+				this.secondaryComponent = "ChatList";
 			}
 		},
 		components: {
 			ChatList,
 			Messages,
 			Hamburger,
-			Loading
+			Loading,
+			NewChat
 		}
 	}
 </script>
@@ -89,6 +77,7 @@
 		background: #e9e9eb;
 		font-family: cursive;
 		font-size: 16px;
+		z-index: 15;
 	}
 
 	.header {
@@ -107,7 +96,7 @@
 			color: white;
 			border-radius: 0;
 			&:hover {
-				background: white;
+				background: rgba(255,255,255,0.3);
 				color: black;
 			}
 		}
