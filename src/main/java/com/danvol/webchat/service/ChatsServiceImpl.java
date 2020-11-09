@@ -127,7 +127,7 @@ public class ChatsServiceImpl implements ChatsService {
             return new ResponseEntity<>(new RequestException("Нет доступа к данному чату"), HttpStatus.OK);
 
         // Создание нового сообщения
-        Message msg = new Message(userId, message);
+        Message msg = new Message(userId, message.trim());
 
         List<Message> messages = chat.getMessages();
         // Создание messageId

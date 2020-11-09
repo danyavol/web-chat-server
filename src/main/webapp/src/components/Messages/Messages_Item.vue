@@ -36,6 +36,7 @@
 		.msg_content pre{
 			font-size: 1rem;
 			font-family: cursive;
+			white-space: pre-wrap;
 		}
 
 		&:last-child {
