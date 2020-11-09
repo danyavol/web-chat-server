@@ -12,7 +12,9 @@
 		<div class="overflow-auto position-relative flex-grow-1 mx-0">
 			<Loading v-if="users == null"/>
 			<div class="chatList-wrapper position-absolute d-flex flex-column px-3 py-3" v-if="users != null">
-				<NewChat_Item v-bind:key="user.login" v-for="user in users" v-bind:user="user"/>
+				<p class="text-center text-secondary" v-if="isDone">Вы уже добавили всех пользователей</p>
+				<p class="text-center text-secondary" v-if="users.length === 0 && !isDone">Пользователь не найден</p>
+				<NewChat_Item v-bind:key="user.login" v-for="user in users" v-bind:user="user" @removeFromSearch="removeFromSearch"/>
 			</div>
 		</div>
 	</div>
@@ -23,12 +25,17 @@ import Loading from '@/components/Loading';
 import NewChat_Item from "@/components/NewChat/NewChat_Item";
 
 export default {
-	beforeMount() {
-		this.findUsers();
+	async beforeMount() {
+		let users = await this.findUsers();
+		if (users.length === 0) {
+			this.isDone = true;
+		}
+		this.users = users;
 	},
 	data() {
 		return {
-			users: null
+			users: null,
+			isDone: false
 		}
 	},
 	methods: {
@@ -36,29 +43,45 @@ export default {
 			this.$emit('openChatList');
 		},
 		findUsers(search='') {
-			this.axios.get(this.$root.url+'users/find', {params: {text: search}})
+			return this.axios.get(this.$root.url + 'users/find', {params: {text: search}})
 				.then(response => {
 					if (!response.data.error) {
-						this.users = response.data.filter(item => {
+						let friends = localStorage.getItem('friends') ? JSON.parse(localStorage.getItem('friends')) : [];
+
+						return response.data.filter(item => {
 							// Фильтрация самого себя
 							if (item.login === localStorage.getItem('login')) {
 								return false
 							}
 
 							// Фильтрация уже добавленных пользователей
-							let friends = localStorage.getItem('friends') ? JSON.parse( localStorage.getItem('friends') ) : [];
 							for (let user of friends) {
 								if (user === item.login) return false;
 							}
 
 							return true;
 
-						})
+						});
 					}
 				});
 		},
-		search(e) {
-			console.log(e.target.value);
+		async search(e) {
+			if (!this.isDone) {
+				console.log(1);
+				let result = await this.findUsers(e.target.value);
+				console.log(result);
+				if (e.target.value.length === 0 && result.length === 0) {
+					this.isDone = true;
+				}
+				this.users = result;
+			}
+		},
+		removeFromSearch(login) {
+			this.users = this.users.filter(item => {
+				return item.login !== login;
+
+			});
+			if (this.users.length === 0) this.isDone = true;
 		}
 	},
 	components: {

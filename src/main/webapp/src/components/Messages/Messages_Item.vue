@@ -6,7 +6,7 @@
 					<p class="mb-2 text-secondary">{{this.$root.getDate(data.sendTime)}}</p>
 				</div>
 				<div class="msg_content">
-					<p class="tex mb-0">{{data.messageText}}</p>
+					<pre class="mb-0">{{data.messageText}}</pre>
 				</div>
 			</div>
 		</div>
@@ -32,6 +32,12 @@
 	.msg_item {
 		box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 		margin-bottom: 10px;
+
+		.msg_content pre{
+			font-size: 1rem;
+			font-family: cursive;
+		}
+
 		&:last-child {
 			margin-bottom: 20px;
 		}

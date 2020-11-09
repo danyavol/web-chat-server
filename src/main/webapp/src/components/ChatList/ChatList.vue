@@ -7,9 +7,9 @@
 			</span>
 		</div>
 
-		<div class="overflow-auto position-relative flex-grow-1 mx-0">
+		<div class="overflow-auto position-relative flex-grow-1 mx-0" >
 			<Loading v-if="chatsList == null"/>
-			<div class="chatList-wrapper position-absolute d-flex flex-column px-3 py-3" v-if="chatsList != null">
+			<div class="chatList-wrapper position-absolute d-flex flex-column px-3 py-3" v-if="chatsList != null" style="max-width: 100%">
 				<p class="text-center" v-if="chatsList && chatsList.length === 0">У вас нет диалогов</p>
 				<ChatListItem v-bind:key="item.chatId" v-for="item in chatsList" v-bind:data="item" @openMessages="openMessages"/>
 			</div>
@@ -23,6 +23,9 @@ import ChatListItem from '@/components/ChatList/ChatList_Item';
 import Loading from '@/components/Loading';
 
 export default {
+	props: {
+		newMessage: Object
+	},
 	data() {
 		return {
 			chatsList: null
@@ -44,12 +47,36 @@ export default {
 				}
 			});
 	},
+	beforeUpdate() {
+		if (this.chatsList != null) {
+			this.chatsList = this.chatsList.sort((a, b) => {
+				if (a.messages.length !== 0 && b.messages.length !== 0){
+					return (new Date(b.messages[0].sendTime)).getTime() - (new Date(a.messages[0].sendTime)).getTime();
+				}
+				if (a.messages.length === 0 && b.messages.length === 0) return 0;
+				if (a.messages.length !== 0 && b.messages.length === 0) return -1;
+				else return 1;
+			})
+		}
+	},
 	methods: {
 		openMessages(data) {
 			this.$emit('openMessages', data);
 		},
 		openNewChat() {
 			this.$emit('openNewChat');
+		}
+	},
+	watch: {
+		newMessage(newMsg) {
+			let chats = JSON.parse(JSON.stringify(this.chatsList));
+			for (let i = 0; i < chats.length; i++) {
+				if (chats[i].chatId === newMsg.chatId) {
+					chats[i].messages[0] = newMsg.message;
+					this.chatsList = chats;
+					break;
+				}
+			}
 		}
 	},
 	components: {

@@ -24,32 +24,31 @@ public class ChatDto {
     private List<MessageDto> messages;
     private ChatUserDto mate;
 
-    public ChatDto(Chat obj, User userB, String type, UsersRepository usersRepository) {
+    public ChatDto(Chat chat, User userA, User userB, String type) {
+        if (type.equals("getAllChats")) {
+            this.chatId = chat.getChatId();
+            this.messages = createMessageDto(chat, userA, userB, true);
+            this.mate = new ChatUserDto(userB.getLogin(), userB.getName());
+        } else if (type.equals("getChatMessages")) {
+            this.chatId = chat.getChatId();
+            this.messages = createMessageDto(chat, userA, userB, false);
+        }
+    }
+
+    public ChatDto(Chat chat, User userB, String type) {
         if (type.equals("createChat")) {
-            this.chatId = obj.getChatId();
+            this.chatId = chat.getChatId();
             this.messages = new ArrayList<>();
             this.mate = new ChatUserDto(userB.getLogin(), userB.getName());
-        } else if (type.equals("getAllChats")) {
-            this.chatId = obj.getChatId();
-            this.messages = createMessageDto(obj, true, usersRepository);
-            this.mate = new ChatUserDto(userB.getLogin(), userB.getName());
-        }
-    }
-
-    public ChatDto(Chat chat, String type, UsersRepository usersRepository) {
-        if (type.equals("getChatMessages")) {
-            this.chatId = chat.getChatId();
-            this.messages = createMessageDto(chat, usersRepository);
         }
     }
 
 
-    private List<MessageDto> createMessageDto(Chat chat, boolean onlyLast, UsersRepository usersRepository) {
-        // Поиск информации по каждому пользователю
+    private List<MessageDto> createMessageDto(Chat chat, User userA, User userB, boolean onlyLast) {
+        // Массив пользователей чата
         List<User> users = new ArrayList<>();
-        for (int i = 0; i < chat.getUsers().size(); i++) {
-            users.add( usersRepository.findByUserId( chat.getUsers().get(i).getUserId() ) );
-        }
+        users.add(userA);
+        users.add(userB);
 
 
         List<MessageDto> messages = new ArrayList<>();
@@ -69,10 +68,6 @@ public class ChatDto {
 
         return messages;
     }
-
-    private List<MessageDto> createMessageDto(Chat chat, UsersRepository usersRepository) {
-        return createMessageDto(chat, false, usersRepository);
-    }
 }
 
 @Data
@@ -86,24 +81,3 @@ class ChatUserDto {
     }
 }
 
-@Data
-class MessageDto {
-    private int messageId;
-    private String messageText;
-    private String senderName;
-    private String senderLogin;
-    private Date sendTime;
-
-    public MessageDto(Message msg, List<User> users) {
-        this.messageId = msg.getMessageId();
-        this.messageText = msg.getMessageText();
-        this.sendTime = msg.getSendTime();
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getUserId().equals(msg.getSender())) {
-                this.senderName = users.get(i).getName();
-                this.senderLogin = users.get(i).getLogin();
-            }
-        }
-
-    }
-}

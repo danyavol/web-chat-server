@@ -2,6 +2,7 @@ package com.danvol.webchat.service;
 
 
 import com.danvol.webchat.dto.ChatDto;
+import com.danvol.webchat.dto.MessageDto;
 import com.danvol.webchat.exception.RequestException;
 import com.danvol.webchat.mongo.entity.Chat;
 import com.danvol.webchat.mongo.entity.ChatUser;
@@ -51,7 +52,7 @@ public class ChatsServiceImpl implements ChatsService {
             chatsRepository.save(chat);
         }
 
-        return new ResponseEntity<>(new ChatDto(chat, userB, "createChat", usersRepository), HttpStatus.OK);
+        return new ResponseEntity<>(new ChatDto(chat, userB, "createChat"), HttpStatus.OK);
     }
 
     @Override
@@ -79,7 +80,7 @@ public class ChatsServiceImpl implements ChatsService {
 
             // Поиск собеседника в БД
             User userB = usersRepository.findByUserId(userBId);
-            userChatsDto.add( new ChatDto(userChats.get(i), userB, "getAllChats", usersRepository) );
+            userChatsDto.add( new ChatDto(userChats.get(i), userA, userB, "getAllChats") );
         }
 
         return new ResponseEntity<>(userChatsDto, HttpStatus.OK);
@@ -87,15 +88,21 @@ public class ChatsServiceImpl implements ChatsService {
 
     @Override
     public ResponseEntity getChatMessages(String userId, String chatId) {
-        User user = usersRepository.findByUserId(userId);
-        if (user == null)
+        User userA = usersRepository.findByUserId(userId);
+        if (userA == null)
             return new ResponseEntity<>(new RequestException("Пользователь с таким id не найден"), HttpStatus.OK);
 
         Chat chat = chatsRepository.findByChatId(chatId);
         if (chat == null)
             return new ResponseEntity<>(new RequestException("Чат с таким id не найден"), HttpStatus.OK);
 
-        return new ResponseEntity<>(new ChatDto(chat, "getChatMessages", usersRepository), HttpStatus.OK);
+        // Айди второго собеседника в чате
+        String userBId = chat.getUsers().get(0).getUserId();
+        if (userBId.equals(userA.getUserId())) userBId = chat.getUsers().get(1).getUserId();
+
+        User userB = usersRepository.findByUserId(userBId);
+
+        return new ResponseEntity<>(new ChatDto(chat, userA, userB, "getChatMessages"), HttpStatus.OK);
     }
 
     @Override
@@ -133,7 +140,7 @@ public class ChatsServiceImpl implements ChatsService {
         // Сохранение чата в БД
         chatsRepository.save(chat);
 
-        return new ResponseEntity<>(msg, HttpStatus.OK);
+        return new ResponseEntity<>(new MessageDto(msg, user), HttpStatus.OK);
     }
 
     @Override

@@ -6,11 +6,11 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUserPlus, faShare } from '@fortawesome/free-solid-svg-icons'
-import {  } from '@fortawesome/free-regular-svg-icons'
+import { faUserPlus, faShare, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faUserPlus, faShare)
+library.add(faUserPlus, faShare, faPlus)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -85,16 +85,18 @@ function getDate(dateStr) {
 	let msgDate = new Date(dateStr);
 	let now = new Date();
 
+	// Подсчет часов и минут
+	let hours = msgDate.getHours();
+	let minutes = msgDate.getMinutes();
+	if (hours < 10) hours = '0' + hours;
+	if (minutes < 10) minutes = '0' + minutes;
+
 	if (msgDate.getDate() === now.getDate()) {
 		// Сегодня
-		let hours = msgDate.getHours();
-		let minutes = msgDate.getMinutes();
-		if (hours < 10) hours = '0' + hours;
-		if (minutes < 10) minutes = '0' + minutes;
 		output = hours + ':' + minutes;
 	} else if (msgDate.getDate() === now.getDate()-1) {
 		// Вчера
-		output = 'Вчера';
+		output = 'Вчера ' + hours + ':' + minutes;
 	} else if (msgDate.getFullYear() === now.getFullYear() ) {
 		// Дата
 		let date = msgDate.getDate();
@@ -114,7 +116,7 @@ function getDate(dateStr) {
 			case '11': month = 'ноя'; break;
 			case '12': month = 'дек'; break;
 		}
-		output = date + ' ' + month;
+		output = date + ' ' + month + ' ' + hours + ':' + minutes;
 	} else {
 		// Дата + год
 		let date = msgDate.getDate();
@@ -124,7 +126,7 @@ function getDate(dateStr) {
 		let year = msgDate.getFullYear();
 		year = year.toString()[2] + year.toString()[3];
 
-		output = date + '.' + month + '.' + year;
+		output = date + '.' + month + '.' + year + ' ' + hours + ':' + minutes;
 	}
 
 	return output;

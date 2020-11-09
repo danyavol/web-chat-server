@@ -1,14 +1,14 @@
 <template>
-	<div class="chat_item card shadow-sm" @click="openMessages">
+	<div class="chat_item card shadow-sm" style="max-width: 100%" @click="openMessages">
 		<div class="card-body p-2">
 			<div class="row">
 				<div class="col-2 align-self-center">
 					<span class="avatar">{{data.mate.name[0]}}</span>
 				</div>
-				<div class="col">
+				<div class="col-10">
 					<div class="d-flex justify-content-between">
-						<p class="card-title mb-1 mate"><span>@{{data.mate.login}}</span><strong class="pl-2">{{data.mate.name}}</strong></p>
-						<p class="mb-1 text-secondary">{{data.messages[0] ? this.$root.getDate(data.messages[0].sendTime) : ''}}</p>
+						<p class="card-title mb-1 mate text-truncate"><span>@{{data.mate.login}}</span><strong class="pl-2">{{data.mate.name}}</strong></p>
+						<p class="mb-1 text-secondary text-sm">{{data.messages[0] ? this.$root.getDate(data.messages[0].sendTime) : ''}}</p>
 					</div>
 					<p class="card-text text-truncate text-muted">{{data.messages[0] ? data.messages[0].messageText : 'Нет сообщений'}}</p>
 				</div>
@@ -54,37 +54,4 @@ export default {
 		border-radius: 50%;
 		color: white;
 	}
-
-
-	/*.chat_item {*/
-	/*    list-style: none;*/
-	/*    padding: 5px;*/
-	/*    margin: 0;*/
-	/*    background: #c8d0e0; // цвет чата*/
-
-	/*    .chat_item__header {*/
-	/*        display: flex;*/
-	/*        justify-content: space-between;*/
-	/*        padding-bottom: 5px;*/
-
-	/*        h4 {*/
-	/*            font-weight: bold;*/
-	/*            // background: whitesmoke;*/
-	/*            padding: 0;*/
-	/*            margin: 0;*/
-	/*        }*/
-	/*        p {*/
-	/*            // background: wheat;*/
-	/*            padding: 0;*/
-	/*            margin: 0;*/
-	/*        }*/
-	/*    }*/
-
-	/*    .chat_item__footer {*/
-	/*        p {*/
-	/*            // background: yellowgreen;*/
-	/*            margin: 0;*/
-	/*        }*/
-	/*    }*/
-	/*}*/
 </style>

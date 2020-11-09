@@ -15,9 +15,15 @@
 				</div>
 			</div>
 
-			<div class="msg-container-bottom d-flex justify-content-center py-3">
-				<textarea type="text" class="w-75" />
-				<input type="button" class="btn btn-outline-primary ml-3" value="Отправить">
+			<div class="msg-container-bottom py-3">
+				<div class="d-flex ">
+					<div style="width: calc(100% - 145px)" class="pl-3">
+						<div contenteditable="true" id="message-input" class="text-secondary" @keypress="keyPress" @focusin="inputFocusIn" @focusout="inputFocusOut" placeholder="Напишите сообщение...">Напишите сообщение...</div>
+					</div>
+					<div style="min-width: 145px" class="px-3">
+						<input type="button" class="btn btn-outline-primary w-100" value="Отправить" @click="sendMessage">
+					</div>
+				</div>
 			</div>
 
 		</div>
@@ -65,6 +71,40 @@
 							location.reload();
 						}
 					});
+			},
+			sendMessage() {
+				let input = document.getElementById('message-input');
+				if (input.innerText !== input.getAttribute('placeholder') && !input.innerText.match(/^\s*$/)) {
+					this.axios.post(this.$root.url+'msg/new', {}, {params: {userId: localStorage.getItem('userId'), chatId: this.chatId, message: input.innerText}})
+						.then(response => {
+							if (!response.data.error) {
+								this.messages.push(response.data);
+								input.innerText = '';
+								this.$emit('newMessage', {chatId: this.chatId, message: response.data});
+							} else {
+								location.reload();
+							}
+						});
+				}
+			},
+			keyPress(e) {
+				if (!e.shiftKey && e.key === 'Enter') {
+					e.preventDefault();
+					this.sendMessage();
+				}
+			},
+			inputFocusIn(e) {
+				if(e.target.innerText === e.target.getAttribute('placeholder')) {
+					e.target.innerText = '';
+					e.target.classList.remove('text-secondary');
+				}
+			},
+			inputFocusOut(e) {
+				if(e.target.innerText === '') {
+					e.target.innerText = e.target.getAttribute('placeholder');
+					e.target.classList.add('text-secondary');
+				}
+
 			}
 		},
 		components: {
@@ -75,6 +115,21 @@
 </script>
 
 <style lang="scss">
+
+	#message-input {
+		border: 1px solid #dee2e6;
+		border-radius: 5px;
+		padding: 5px 20px;
+		width: 100%;
+		max-height: 300px;
+		overflow: auto;
+
+		&:focus {
+			border: 1px solid #6c757d;
+			outline: 0;
+		}
+	}
+
 	.msg-container-header {
 		border-bottom: 1px solid #dee2e6;
 		background: white;

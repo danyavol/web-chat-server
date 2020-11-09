@@ -3,23 +3,23 @@
 		<div class="container-lg vh-100 d-flex flex-column">
 			<div class="row header position-relative">
 				<div class="col d-flex align-items-center">
-					<span v-on:click="dropDown" >
-						<Hamburger id="hamb"/>
+					<span class="logo ml-2" v-on:click="dropDown" >
+						<Logo />
 					</span>
 					<p>Мессенджер</p>
 				</div>
 				<div class="d-flex align-items-center mr-3">
-					<button type="button" class="btn hb" id="settings">Настройки</button>
+					<button type="button" class="btn hb" @click="openSettingsBtn">Настройки</button>
 					<button type="button" class="btn hb" @click="logout">Выйти</button>
 				</div>
 			</div>
 			<div class="row flex-grow-1 bg-light">
-				<component class="col-4" v-bind:is="secondaryComponent"
+				<component class="col-4" v-bind:is="secondaryComponent" v-bind="secondaryProps"
 					@openMessages="openMessages"
 					@openNewChat="openNewChat"
 					@openChatList="openChatList"/>
 
-				<component class="col-8" v-bind:is="mainComponent" v-bind="mainProps"/>
+				<component class="col-8" v-bind:is="mainComponent" v-bind="mainProps" @newMessage="newMessage"/>
 			</div>
 		</div>
 	</div>
@@ -29,16 +29,20 @@
 	import Loading from '@/components/Loading';
 	import ChatList from '@/components/ChatList/ChatList';
 	import Messages from '@/components/Messages/Messages';
+	import Settings from '@/components/Settings/Settings';
 	import NewChat from '@/components/NewChat/NewChat';
-	import Hamburger from '@/components/Hamburger';
+	import Logo from '@/components/Logo';
+
+	import Empty from '@/components/Empty';
 
 	export default {
 		name: 'Main',
 		data() {
 			return {
+				mainComponent: 'Empty',
+				mainProps: null,
 				secondaryComponent: 'ChatList',
-				mainComponent: '',
-				mainProps: {}
+				secondaryProps: null
 			}
 		},
 		methods: {
@@ -55,24 +59,46 @@
 				this.mainProps = data;
 				this.mainComponent = "Messages";
 			},
+			openSettingsBtn() {
+				if (this.mainComponent === "Settings" && this.mainProps == null) {
+					this.mainComponent = "Empty";
+				} else if (this.mainComponent === "Settings") {
+					this.mainComponent = "Messages";
+				}else {
+					this.mainComponent = "Settings";
+				}
+			},
 			openNewChat() {
 				this.secondaryComponent = "NewChat";
 			},
 			openChatList() {
 				this.secondaryComponent = "ChatList";
+			},
+			newMessage(message) {
+				this.secondaryProps = {newMessage: message};
 			}
 		},
 		components: {
 			ChatList,
 			Messages,
-			Hamburger,
+			Settings,
+			Logo,
 			Loading,
+			Empty,
 			NewChat
 		}
 	}
 </script>
 
 <style lang="scss">
+	.flip {
+
+	}
+
+	.text-sm {
+		font-size: 0.85rem !important;
+	}
+
 	#app {
 		background: #e9e9eb;
 		font-family: cursive;
@@ -83,6 +109,11 @@
 	.header {
 		background: #ef4b4c; // цвет хедера сверху
 		height: 40px;
+
+		.logo {
+			width: 30px;
+		}
+
 		p {
 			margin-bottom: 0;
 			margin-left: 40px;
@@ -95,9 +126,13 @@
 			background: transparent;
 			color: white;
 			border-radius: 0;
+
 			&:hover {
 				background: rgba(255,255,255,0.3);
 				color: black;
+			}
+			&:focus {
+				box-shadow: 0 0 0;
 			}
 		}
 	}
