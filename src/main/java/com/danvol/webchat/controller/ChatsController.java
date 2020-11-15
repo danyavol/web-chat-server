@@ -14,11 +14,10 @@ public class ChatsController {
 
     // Создать новый чат
     @PostMapping("/new")
-    public ResponseEntity createChat(@RequestParam(name = "myId") String userId, @RequestParam(name = "mateLogin") String login) {
-        // input: {creator: userId, chatMember: login}
-        // validation: login is existing
-        // output: chatId
-        return chatsService.createChat(userId, login);
+    public ResponseEntity createChat(@RequestParam String myUuid, @RequestParam String mateId) {
+        // input: myUuid, mateId
+        // output: chat
+        return chatsService.createChat(myUuid, mateId);
     }
 
 //    // Удалить чат
@@ -31,17 +30,17 @@ public class ChatsController {
 
     // Получить список чатов
     @GetMapping("/getAll")
-    public ResponseEntity getAllChats(@RequestParam String userId) {
-        // input: userId
-        // output: [ {chatId, login} ]
-        return chatsService.getAllChats(userId);
+    public ResponseEntity getAllChats(@RequestParam String uuid) {
+        // input: uuid
+        // output: [ chat ]
+        return chatsService.getAllChats(uuid);
     }
 
     // Получить список сообщений в чате
     @GetMapping("/getOne")
-    public ResponseEntity getChatMessages(@RequestParam String userId, @RequestParam String chatId) {
-        // input: userId, chatId
+    public ResponseEntity getChatMessages(@RequestParam String uuid, @RequestParam String chatId) {
+        // input: uuid, chatId
         // output:
-        return chatsService.getChatMessages(userId, chatId);
+        return chatsService.getChatMessages(uuid, chatId);
     }
 }

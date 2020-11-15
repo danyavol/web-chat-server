@@ -11,8 +11,7 @@ import java.util.List;
 public class MessageDto {
     private int messageId;
     private String messageText;
-    private String senderName;
-    private String senderLogin;
+    private ChatUserDto sender;
     private Date sendTime;
 
     public MessageDto(Message msg, List<User> users) {
@@ -20,9 +19,8 @@ public class MessageDto {
         this.messageText = msg.getMessageText();
         this.sendTime = msg.getSendTime();
         for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getUserId().equals(msg.getSender())) {
-                this.senderName = users.get(i).getName();
-                this.senderLogin = users.get(i).getLogin();
+            if (users.get(i).getUserId().equals(msg.getSenderId())) {
+                this.sender = new ChatUserDto( users.get(i) );
             }
         }
 
@@ -32,7 +30,6 @@ public class MessageDto {
         this.messageId = msg.getMessageId();
         this.messageText = msg.getMessageText();
         this.sendTime = msg.getSendTime();
-        this.senderName = user.getName();
-        this.senderLogin = user.getLogin();
+        this.sender = new ChatUserDto( user );
     }
 }

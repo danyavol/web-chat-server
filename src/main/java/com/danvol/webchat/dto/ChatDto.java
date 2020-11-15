@@ -28,10 +28,11 @@ public class ChatDto {
         if (type.equals("getAllChats")) {
             this.chatId = chat.getChatId();
             this.messages = createMessageDto(chat, userA, userB, true);
-            this.mate = new ChatUserDto(userB.getLogin(), userB.getName());
+            this.mate = new ChatUserDto(userB);
         } else if (type.equals("getChatMessages")) {
             this.chatId = chat.getChatId();
             this.messages = createMessageDto(chat, userA, userB, false);
+            this.mate = new ChatUserDto(userB);
         }
     }
 
@@ -39,7 +40,7 @@ public class ChatDto {
         if (type.equals("createChat")) {
             this.chatId = chat.getChatId();
             this.messages = new ArrayList<>();
-            this.mate = new ChatUserDto(userB.getLogin(), userB.getName());
+            this.mate = new ChatUserDto(userB);
         }
     }
 
@@ -67,17 +68,6 @@ public class ChatDto {
 
 
         return messages;
-    }
-}
-
-@Data
-class ChatUserDto {
-    private String login;
-    private String name;
-
-    public ChatUserDto(String login, String name) {
-        this.login = login;
-        this.name = name;
     }
 }
 

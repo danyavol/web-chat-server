@@ -17,7 +17,7 @@ public class UsersController {
     @PostMapping("/new")
     public ResponseEntity createUser(@RequestParam String login, @RequestParam String password, @RequestParam String  name) {
         // input: login, password, name
-        // output: userId, login, name
+        // output: uuid, userId, login, name
         return usersService.createUser(login, password, name);
     }
 
@@ -25,43 +25,44 @@ public class UsersController {
     @PostMapping("/auth")
     public ResponseEntity authUser(@RequestParam String login, @RequestParam String password) {
         // input: login, password
-        // output: userId, login, name
+        // output: uuid, userId, login, name
         return usersService.authUser(login, password);
     }
 
     // Авторизация пользователя
     @PostMapping("/checkAuth")
-    public boolean checkUserAuth(@RequestParam String userId) {
-        // input: userId
+    public ResponseEntity checkUserAuth(@RequestParam String uuid) {
+        // input: uuid
         // output: bool
-        return usersService.checkUserAuth(userId);
+        return usersService.checkUserAuth(uuid);
     }
 
     // Изменить существующего пользователя
     @PutMapping("/edit")
-    public ResponseEntity editUser(@RequestParam String userId,
+    public ResponseEntity editUser(@RequestParam String uuid,
                                    @RequestParam(required = false) String login,
                                    @RequestParam(required = false) String password,
-                                   @RequestParam(required = false) String name) {
-        // input: userId
+                                   @RequestParam(required = false) String name,
+                                   @RequestParam(required = false) String colorScheme) {
+        // input: uuid
         // output: userId, login, name
-        return usersService.editUser(userId, login, password, name);
+        return usersService.editUser(uuid, login, password, name, colorScheme);
     }
 
     // Изменить существующего пользователя
     @DeleteMapping("/delete")
-    public ResponseEntity deleteUser(@RequestParam String userId) {
-        // input: userId
+    public ResponseEntity deleteUser(@RequestParam String uuid) {
+        // input: uuid
         // output:
-        return usersService.deleteUser(userId);
+        return usersService.deleteUser(uuid);
     }
 
     // Вернуть данные одного пользователя
     @GetMapping("/get")
-    public ResponseEntity getUser(@RequestParam String login) {
-        // input: login
+    public ResponseEntity getUser(@RequestParam String userId) {
+        // input: userId
         // output: name
-        return usersService.getUser(login);
+        return usersService.getUser(userId);
     }
 
     // Найти пользователей

@@ -9,13 +9,13 @@ public interface UsersService {
 
     ResponseEntity authUser(String login, String password);
 
-    boolean checkUserAuth(String userId);
+    ResponseEntity checkUserAuth(String uuid);
 
-    ResponseEntity editUser(String userId, String login, String password, String name);
+    ResponseEntity editUser(String uuid, String login, String password, String name, String colorScheme);
 
-    ResponseEntity deleteUser(String userId);
+    ResponseEntity deleteUser(String uuid);
 
-    ResponseEntity getUser(String login);
+    ResponseEntity getUser(String userId);
 
     ResponseEntity findUsers(String text);
 }

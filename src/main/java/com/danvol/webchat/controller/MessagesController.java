@@ -15,17 +15,17 @@ public class MessagesController {
 
     // Отправить сообщение
     @PostMapping("/new")
-    public ResponseEntity newMessage(@RequestParam String userId, @RequestParam String chatId, @RequestParam String message) {
-        // input: userId, chatId, message
+    public ResponseEntity newMessage(@RequestParam String uuid, @RequestParam String chatId, @RequestParam String message) {
+        // input: uuid, chatId, message
         // output: msgId
-        return chatsService.newMessage(userId, chatId, message);
+        return chatsService.newMessage(uuid, chatId, message);
     }
 
     // Удалить сообщение
     @DeleteMapping("/delete")
-    public ResponseEntity deleteMessage(@RequestParam String userId, @RequestParam String chatId, @RequestParam int messageId) {
-        // input: userId, chatId, msgId
+    public ResponseEntity deleteMessage(@RequestParam String uuid, @RequestParam String chatId, @RequestParam int messageId) {
+        // input: uuid, chatId, msgId
         // output:
-        return chatsService.deleteMessage(userId, chatId, messageId);
+        return chatsService.deleteMessage(uuid, chatId, messageId);
     }
 }

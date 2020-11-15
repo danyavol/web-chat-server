@@ -26,9 +26,9 @@ public class ChatsServiceImpl implements ChatsService {
     private UsersRepository usersRepository;
 
     @Override
-    public ResponseEntity createChat(String userId, String login) {
-        User userA = usersRepository.findByUserId(userId);
-        User userB = usersRepository.findByLogin(login);
+    public ResponseEntity createChat(String myUuid, String mateId) {
+        User userA = usersRepository.findByUuid(myUuid);
+        User userB = usersRepository.findByUserId(mateId);
         if (userA == null)
             return new ResponseEntity<>(new RequestException("Неверный id пользователя"), HttpStatus.OK);
         if (userB == null)
@@ -36,37 +36,34 @@ public class ChatsServiceImpl implements ChatsService {
 
         // Создание списка пользователей для класса Chat
         List<ChatUser> chatUsers = new ArrayList<>();
-        chatUsers.add( new ChatUser(userId) );
+        chatUsers.add( new ChatUser(userA.getUserId()) );
         chatUsers.add( new ChatUser(userB.getUserId()) );
 
         // Сортировка списка пользователей
         chatUsers.sort(ChatUser::compareTo);
 
-        Chat chat;
-
         // Поиск такого чата в БД
-        chat = chatsRepository.findByUsers(chatUsers);
+        Chat chat = chatsRepository.findByUsers(chatUsers);
         if (chat == null) {
             // Если чат не найден, создаем новый
-            chat = new Chat(chatUsers);
-            chatsRepository.save(chat);
+            chat = chatsRepository.save( new Chat(chatUsers) );
         }
 
         return new ResponseEntity<>(new ChatDto(chat, userB, "createChat"), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity getAllChats(String userId) {
-        User userA = usersRepository.findByUserId(userId);
+    public ResponseEntity getAllChats(String uuid) {
+        User userA = usersRepository.findByUuid(uuid);
         if (userA == null)
-            return new ResponseEntity<>(new RequestException("Пользователь с таким id не найден"), HttpStatus.OK);
+            return new ResponseEntity<>(new RequestException("Пользователь с таким uuid не найден"), HttpStatus.OK);
 
         List<Chat> allChats = chatsRepository.findAll();
         List<Chat> userChats = new ArrayList<>();
         // Поиск нужных чатов среди всего списка
         for (int i = 0; i < allChats.size(); i++) {
             for (int j = 0; j < allChats.get(i).getUsers().size(); j++) {
-                if (allChats.get(i).getUsers().get(j).getUserId().equals(userId)) {
+                if (allChats.get(i).getUsers().get(j).getUserId().equals( userA.getUserId() )) {
                     userChats.add( allChats.get(i) );
                 }
             }
@@ -76,7 +73,7 @@ public class ChatsServiceImpl implements ChatsService {
         for (int i = 0; i < userChats.size(); i++) {
             // Выборка айди собеседеника
             String userBId = userChats.get(i).getUsers().get(0).getUserId();
-            if (userBId.equals(userId)) userBId = userChats.get(i).getUsers().get(1).getUserId();
+            if (userBId.equals( userA.getUserId() )) userBId = userChats.get(i).getUsers().get(1).getUserId();
 
             // Поиск собеседника в БД
             User userB = usersRepository.findByUserId(userBId);
@@ -87,10 +84,10 @@ public class ChatsServiceImpl implements ChatsService {
     }
 
     @Override
-    public ResponseEntity getChatMessages(String userId, String chatId) {
-        User userA = usersRepository.findByUserId(userId);
+    public ResponseEntity getChatMessages(String uuid, String chatId) {
+        User userA = usersRepository.findByUuid(uuid);
         if (userA == null)
-            return new ResponseEntity<>(new RequestException("Пользователь с таким id не найден"), HttpStatus.OK);
+            return new ResponseEntity<>(new RequestException("Пользователь с таким uuid не найден"), HttpStatus.OK);
 
         Chat chat = chatsRepository.findByChatId(chatId);
         if (chat == null)
@@ -98,7 +95,7 @@ public class ChatsServiceImpl implements ChatsService {
 
         // Айди второго собеседника в чате
         String userBId = chat.getUsers().get(0).getUserId();
-        if (userBId.equals(userA.getUserId())) userBId = chat.getUsers().get(1).getUserId();
+        if (userBId.equals( userA.getUserId() )) userBId = chat.getUsers().get(1).getUserId();
 
         User userB = usersRepository.findByUserId(userBId);
 
@@ -106,9 +103,9 @@ public class ChatsServiceImpl implements ChatsService {
     }
 
     @Override
-    public ResponseEntity newMessage(String userId, String chatId, String message) {
-        User user = usersRepository.findByUserId(userId);
-        if (user == null) return new ResponseEntity<>(new RequestException("Неверный id пользователя"), HttpStatus.OK);
+    public ResponseEntity newMessage(String uuid, String chatId, String message) {
+        User user = usersRepository.findByUuid(uuid);
+        if (user == null) return new ResponseEntity<>(new RequestException("Неверный uuid пользователя"), HttpStatus.OK);
         Chat chat = chatsRepository.findByChatId(chatId);
         if (chat == null) return new ResponseEntity<>(new RequestException("Неверный id чата"), HttpStatus.OK);
 
@@ -118,7 +115,7 @@ public class ChatsServiceImpl implements ChatsService {
         // Проверка есть ли user в чате chat
         boolean flag = true;
         for (int i = 0; i < chat.getUsers().size(); i++) {
-            if (userId.equals(chat.getUsers().get(i).getUserId())) {
+            if (user.getUserId().equals(chat.getUsers().get(i).getUserId())) {
                 flag = false;
                 break;
             }
@@ -127,7 +124,7 @@ public class ChatsServiceImpl implements ChatsService {
             return new ResponseEntity<>(new RequestException("Нет доступа к данному чату"), HttpStatus.OK);
 
         // Создание нового сообщения
-        Message msg = new Message(userId, message.trim());
+        Message msg = new Message(user.getUserId(), message.trim());
 
         List<Message> messages = chat.getMessages();
         // Создание messageId
@@ -144,16 +141,16 @@ public class ChatsServiceImpl implements ChatsService {
     }
 
     @Override
-    public ResponseEntity deleteMessage(String userId, String chatId, int messageId) {
-        User user = usersRepository.findByUserId(userId);
-        if (user == null) return new ResponseEntity<>(new RequestException("Неверный id пользователя"), HttpStatus.OK);
+    public ResponseEntity deleteMessage(String uuid, String chatId, int messageId) {
+        User user = usersRepository.findByUuid(uuid);
+        if (user == null) return new ResponseEntity<>(new RequestException("Неверный uuid пользователя"), HttpStatus.OK);
         Chat chat = chatsRepository.findByChatId(chatId);
         if (chat == null) return new ResponseEntity<>(new RequestException("Неверный id чата"), HttpStatus.OK);
 
         // Проверка есть ли user в чате chat
         boolean flag = true;
         for (int i = 0; i < chat.getUsers().size(); i++) {
-            if (userId.equals(chat.getUsers().get(i).getUserId())) {
+            if (user.getUserId().equals(chat.getUsers().get(i).getUserId())) {
                 flag = false;
                 break;
             }
@@ -165,9 +162,16 @@ public class ChatsServiceImpl implements ChatsService {
         flag = true;
         for (int i = 0; i < chat.getMessages().size(); i++) {
             if (messageId == chat.getMessages().get(i).getMessageId()) {
-                chat.getMessages().remove(i);
-                flag = false;
-                break;
+
+                // Проверка принадлежит ли это сообщение этому пользователю
+                if (chat.getMessages().get(i).getSenderId().equals( user.getUserId() )) {
+                    chat.getMessages().remove(i);
+                    flag = false;
+                    break;
+                } else {
+                    return new ResponseEntity<>(new RequestException("Нельзя удалить чужое сообщение"), HttpStatus.OK);
+                }
+
             }
         }
         if (flag)

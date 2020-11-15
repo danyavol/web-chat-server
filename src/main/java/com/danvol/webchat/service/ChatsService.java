@@ -6,15 +6,17 @@ import org.springframework.http.ResponseEntity;
 
 public interface ChatsService {
 
-    ResponseEntity createChat(String userId, String login);
+    ResponseEntity createChat(String myUuid, String mateId);
 
 //    ResponseEntity deleteChat(Chat chatData);
 
-    ResponseEntity getAllChats(String userId);
+    ResponseEntity getAllChats(String uuid);
 
-    ResponseEntity getChatMessages(String userId, String chatId);
+    ResponseEntity getChatMessages(String uuid, String chatId);
 
-    ResponseEntity deleteMessage(String userId, String chatId, int messageId);
+    ResponseEntity newMessage(String uuid, String chatId, String message);
 
-    ResponseEntity newMessage(String userId, String chatId, String message);
+    ResponseEntity deleteMessage(String uuid, String chatId, int messageId);
+
+
 }

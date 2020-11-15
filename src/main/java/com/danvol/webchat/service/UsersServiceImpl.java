@@ -56,31 +56,34 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public ResponseEntity authUser(String login, String password) {
-        User userA = usersRepository.findByLogin(login);
-        if (userA == null) {
+        User user = usersRepository.findByLogin(login);
+        if (user == null) {
             // Неверный логин
             return new ResponseEntity<>(new RequestException("Неверный логин"), HttpStatus.OK);
         }
-        if (!userA.getPassword().equals(password)) {
+        if (!user.getPassword().equals(password)) {
             // Неверный пароль
             return new ResponseEntity<>(new RequestException("Неверный пароль"), HttpStatus.OK);
         } else {
             // Вход выполнен успешно
-            UserDto userB = new UserDto(userA, "authUser");
+            UserDto userB = new UserDto(user, "authUser");
             return new ResponseEntity<>(userB, HttpStatus.OK);
         }
     }
 
     @Override
-    public boolean checkUserAuth(String userId) {
-        User user = usersRepository.findByUserId(userId);
-        if (user != null) return true;
-        else return false;
+    public ResponseEntity checkUserAuth(String uuid) {
+        User user = usersRepository.findByUuid(uuid);
+        if (user != null) return new ResponseEntity<>(new UserDto(user, "authUser"), HttpStatus.OK);
+        else return new ResponseEntity<>(new RequestException("Неверный UUID"), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity editUser(String userId, String login, String password, String name) {
-        User user = usersRepository.findByUserId(userId);
+    public ResponseEntity editUser(String uuid, String login, String password, String name, String colorScheme) {
+        User user = usersRepository.findByUuid(uuid);
+        if (user == null) {
+            return new ResponseEntity<>(new RequestException("Неверный UUID"), HttpStatus.OK);
+        }
 
         // Проверка логина
         if (login != null) {
@@ -101,25 +104,38 @@ public class UsersServiceImpl implements UsersService {
             String validName = UserValidation.name(name);
             if (validName.length() != 0) user.setName(validName);
             else return new ResponseEntity<>(new RequestException("Неверный формат имени"), HttpStatus.OK);
-
         }
+
+        // Проверка цветовой схемы
+        if (colorScheme != null) {
+            try {
+                int colorSchemeInt = Integer.parseInt(colorScheme);
+                if (colorSchemeInt >= 1 && colorSchemeInt <= 8) {
+                    user.setColorScheme(colorSchemeInt);
+                } else throw new Exception();
+            } catch (Exception e) {
+                return new ResponseEntity<>(new RequestException("Неверный формат цветовой схемы"), HttpStatus.OK);
+            }
+        }
+
 
         return new ResponseEntity<>(new UserDto(usersRepository.save(user), "editUser"), HttpStatus.OK);
     }
 
 
     @Override
-    public ResponseEntity deleteUser(String userId) {
-        if (usersRepository.findByUserId(userId) == null) {
+    public ResponseEntity deleteUser(String uuid) {
+        if (usersRepository.findByUuid(uuid) == null) {
             return new ResponseEntity<>(new RequestException("Пользователь не найден"), HttpStatus.OK);
         }
-        usersRepository.deleteByUserId(userId);
+        usersRepository.deleteByUuid(uuid);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity getUser(String login) {
-        User user = usersRepository.findByLogin(login);
+    public ResponseEntity getUser(String userId) {
+        User user = usersRepository.findByUserId(userId);
         if (user == null) {
             return new ResponseEntity<>(new RequestException("Пользователь не найден"), HttpStatus.OK);
         }

@@ -12,11 +12,11 @@ import java.util.Date;
 public class Message {
     private int messageId;
     private String messageText;
-    private String sender;
+    private String senderId;
     private Date sendTime;
 
-    public Message(String sender, String messageText) {
-        this.sender = sender;
+    public Message(String senderId, String messageText) {
+        this.senderId = senderId;
         this.messageText = messageText;
         this.sendTime = new Date();
     }
