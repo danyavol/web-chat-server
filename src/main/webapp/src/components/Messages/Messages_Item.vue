@@ -2,7 +2,7 @@
 		<div class="msg_item card w-75" v-bind:class="{'ml-auto': this.isMe}">
 			<div class="card-body p-2">
 				<div class="msg_header d-flex justify-content-between">
-					<p class="text-secondary mb-2">{{data.senderName}}</p>
+					<p class="text-secondary mb-2">{{mateName}}</p>
 					<p class="mb-2 text-secondary">{{this.$root.getDate(data.sendTime)}}</p>
 				</div>
 				<div class="msg_content">
@@ -15,7 +15,8 @@
 <script>
 	export default {
 		props: {
-			data: Object
+			data: Object,
+			mateName: String
 		},
 		data () {
 			return {

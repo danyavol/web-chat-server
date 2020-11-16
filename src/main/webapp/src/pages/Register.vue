@@ -1,44 +1,44 @@
 <template>
-		<div class="bg-light">
-				<div class="container vh-100 d-flex justify-content-center align-items-center">
-						<div class="card w-100" style="max-width: 450px">
-								<div class="card-title mb-0 border-bottom">
-										<h3 class="text-center my-3">Регистрация</h3>
-								</div>
-								<div class="card-body">
-										<p class="bg-danger text-white card p-2 mb-2" id="errorAlert" style="display: none"></p>
-										<form>
-												<div class="form-group">
-														<label for="name">Имя</label>
-														<input type="text" class="form-control" id="name">
-														<div class="invalid-feedback">
-															С большой буквы, не менее 3-х символов.
-														</div>
-												</div>
-												<div class="form-group">
-														<label for="login">Логин</label>
-														<input type="text" class="form-control" id="login">
-														<div class="invalid-feedback">
-															Маленькие латинские буквы или цифры, не менее 4-х символов, первый символ не цифра.
-														</div>
-												</div>
-												<div class="form-group">
-														<label for="password">Пароль</label>
-														<input type="password" class="form-control" id="password">
-														<div class="invalid-feedback">
-															Не менее 4-х латинский букв или цифр.
-														</div>
-												</div>
-												<div class="d-flex justify-content-center">
-														<button type="button" id="submit" class="btn btn-primary px-5">Создать аккаунт</button>
-												</div>
-												<hr>
-												<a href="/auth">Уже есть аккаунт?</a>
-										</form>
-								</div>
-						</div>
+	<div class="bg-light">
+		<div class="container vh-100 d-flex justify-content-center align-items-center">
+			<div class="card w-100" style="max-width: 450px">
+				<div class="card-title mb-0 border-bottom">
+					<h3 class="text-center my-3">Регистрация</h3>
 				</div>
+				<div class="card-body">
+					<p class="bg-danger text-white card p-2 mb-2" id="errorAlert" style="display: none"></p>
+					<form>
+						<div class="form-group">
+							<label for="name">Имя</label>
+							<input type="text" class="form-control" id="name">
+							<div class="invalid-feedback">
+								С большой буквы, не менее 3-х символов.
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="login">Логин</label>
+							<input type="text" class="form-control" id="login">
+							<div class="invalid-feedback">
+								Маленькие латинские буквы или цифры, не менее 4-х символов, первый символ не цифра.
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="password">Пароль</label>
+							<input type="password" class="form-control" id="password">
+							<div class="invalid-feedback">
+								Не менее 4-х латинский букв или цифр.
+							</div>
+						</div>
+						<div class="d-flex justify-content-center">
+							<button type="button" id="submit" class="btn btn-primary px-5">Создать аккаунт</button>
+						</div>
+						<hr>
+						<a href="/auth">Уже есть аккаунт?</a>
+					</form>
+				</div>
+			</div>
 		</div>
+	</div>
 </template>
 
 <script>
@@ -94,10 +94,7 @@ export default {
 						error.innerText = response.data.error;
 						error.style.display = 'block';
 					} else {
-						console.log(response.data);
-						localStorage.setItem('userId', response.data.userId);
-						localStorage.setItem('login', response.data.login);
-						localStorage.setItem('name', response.data.name);
+						localStorage.setItem('uuid', response.data.uuid);
 						this.$router.push('/');
 					}
 				})

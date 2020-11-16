@@ -1,31 +1,31 @@
 <template>
-		<div class="bg-light">
-				<div class="container vh-100 d-flex justify-content-center align-items-center">
-						<div class="card w-100" style="max-width: 450px">
-								<div class="card-title mb-0 border-bottom">
-										<h3 class="text-center my-3">Авторизация</h3>
-								</div>
-								<div class="card-body">
-										<p class="bg-danger text-white card p-2" id="errorAlert" style="display: none"></p>
-										<form id="loginForm">
-												<div class="form-group">
-														<label for="login">Логин</label>
-														<input type="text" class="form-control" id="login">
-												</div>
-												<div class="form-group">
-														<label for="password">Пароль</label>
-														<input type="password" class="form-control" id="password">
-												</div>
-												<div class="d-flex justify-content-center">
-														<button type="button" id="submit" class="btn btn-primary px-5">Войти</button>
-												</div>
-										</form>
-										<hr>
-										<a href="/register">Создать аккаунт</a>
-								</div>
-						</div>
+	<div class="bg-light">
+		<div class="container vh-100 d-flex justify-content-center align-items-center">
+			<div class="card w-100" style="max-width: 450px">
+				<div class="card-title mb-0 border-bottom">
+					<h3 class="text-center my-3">Авторизация</h3>
 				</div>
+				<div class="card-body">
+					<p class="bg-danger text-white card p-2" id="errorAlert" style="display: none"></p>
+					<form id="loginForm">
+						<div class="form-group">
+							<label for="login">Логин</label>
+							<input type="text" class="form-control" id="login">
+						</div>
+						<div class="form-group">
+							<label for="password">Пароль</label>
+							<input type="password" class="form-control" id="password">
+						</div>
+						<div class="d-flex justify-content-center">
+							<button type="button" id="submit" class="btn btn-primary px-5">Войти</button>
+						</div>
+					</form>
+					<hr>
+					<a href="/register">Создать аккаунт</a>
+				</div>
+			</div>
 		</div>
+	</div>
 </template>
 
 <script>
@@ -52,6 +52,7 @@ export default {
 					error.innerText = response.data.error;
 				} else {
 					// Успешный вход
+					localStorage.setItem('uuid', response.data.uuid);
 					this.$router.push('/')
 				}
 			})

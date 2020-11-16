@@ -3,7 +3,7 @@
 		<div class="card-body p-2">
 			<div class="row">
 				<div class="col-2 align-self-center">
-					<span class="avatar color1">{{this.user.name[0]}}</span>
+					<span class="avatar" :class="'color'+user.colorScheme">{{this.user.name[0]}}</span>
 				</div>
 				<div class="col">
 					<div class="d-flex h-100 align-items-center justify-content-between">

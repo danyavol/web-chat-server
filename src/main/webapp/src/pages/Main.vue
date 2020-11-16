@@ -34,6 +34,7 @@
 	import Logo from '@/components/Logo';
 
 	import Empty from '@/components/Empty';
+	import axios from "axios";
 
 	export default {
 		name: 'Main',
@@ -42,16 +43,20 @@
 				mainComponent: 'Empty',
 				mainProps: null,
 				secondaryComponent: 'ChatList',
-				secondaryProps: null
+				secondaryProps: null,
+				notifications: []
 			}
+		},
+		beforeMount() {
+			setInterval(this.checkNotifications, 1000);
 		},
 		methods: {
 			logout() {
-        localStorage.removeItem('uuid');
+				localStorage.removeItem('uuid');
 				localStorage.removeItem('userId');
 				localStorage.removeItem('login');
 				localStorage.removeItem('name');
-        localStorage.removeItem('colorScheme');
+				localStorage.removeItem('colorScheme');
 				this.$router.push('/auth');
 			},
 			openMessages(data) {
@@ -75,6 +80,14 @@
 			},
 			newMessage(message) {
 				this.secondaryProps = {newMessage: message};
+			},
+			checkNotifications() {
+				axios.get(this.$root.url+'chats/checkNotifications', {params: {uuid: localStorage.getItem('uuid')}})
+				.then(response => {
+					if (response.data) {
+						this.notifications = response.data;
+					}
+				});
 			}
 		},
 		components: {

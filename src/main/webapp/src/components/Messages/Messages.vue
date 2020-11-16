@@ -11,7 +11,7 @@
 				<Loading v-if="messages == null" />
 				<div class="position-absolute d-flex flex-column msg-wrapper px-3" v-if="messages != null">
 					<p class="text-center text-secondary" v-if="messages.length === 0">Нет сообщений</p>
-					<Message v-bind:key="item.id" v-for="item in messages" v-bind:data="item" />
+					<Message v-bind:key="item.id" v-for="item in messages" v-bind:data="item" v-bind:mateName="mateName"/>
 				</div>
 			</div>
 
