@@ -4,17 +4,15 @@ import com.danvol.webchat.exception.RequestException;
 import com.danvol.webchat.mongo.entity.User;
 import com.danvol.webchat.dto.UserDto;
 import com.danvol.webchat.mongo.repository.UsersRepository;
+import com.danvol.webchat.session.Session;
 import com.danvol.webchat.validation.UserValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class UsersServiceImpl implements UsersService {
@@ -74,7 +72,10 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public ResponseEntity checkUserAuth(String uuid) {
         User user = usersRepository.findByUuid(uuid);
-        if (user != null) return new ResponseEntity<>(new UserDto(user, "authUser"), HttpStatus.OK);
+        if (user != null) {
+            Session.addNewUser(user);
+            return new ResponseEntity<>(new UserDto(user, "authUser"), HttpStatus.OK);
+        }
         else return new ResponseEntity<>(new RequestException("Неверный UUID"), HttpStatus.OK);
     }
 

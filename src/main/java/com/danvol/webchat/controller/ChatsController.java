@@ -43,4 +43,20 @@ public class ChatsController {
         // output:
         return chatsService.getChatMessages(uuid, chatId);
     }
+
+    // Получить список сообщений в чате
+    @GetMapping("/checkNotifications")
+    public ResponseEntity checkNotifications(@RequestParam String uuid) {
+        // input: uuid
+        // output: notifications
+        return chatsService.checkNotifications(uuid);
+    }
+
+    // Очистить уведомления в чате
+    @GetMapping("/clearNotifications")
+    public ResponseEntity clearNotifications(@RequestParam String uuid, @RequestParam String chatId) {
+        // input: uuid, chatId
+        // output: notifications
+        return chatsService.clearNotifications(uuid, chatId);
+    }
 }

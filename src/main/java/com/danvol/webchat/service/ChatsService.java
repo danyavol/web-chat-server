@@ -17,5 +17,7 @@ public interface ChatsService {
 
     ResponseEntity deleteMessage(String uuid, String chatId, int messageId);
 
+    ResponseEntity checkNotifications(String uuid);
 
+    ResponseEntity clearNotifications(String uuid, String chatId);
 }

@@ -4,12 +4,10 @@ package com.danvol.webchat.service;
 import com.danvol.webchat.dto.ChatDto;
 import com.danvol.webchat.dto.MessageDto;
 import com.danvol.webchat.exception.RequestException;
-import com.danvol.webchat.mongo.entity.Chat;
-import com.danvol.webchat.mongo.entity.ChatUser;
-import com.danvol.webchat.mongo.entity.Message;
-import com.danvol.webchat.mongo.entity.User;
+import com.danvol.webchat.mongo.entity.*;
 import com.danvol.webchat.mongo.repository.ChatsRepository;
 import com.danvol.webchat.mongo.repository.UsersRepository;
+import com.danvol.webchat.session.Session;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -146,6 +144,9 @@ public class ChatsServiceImpl implements ChatsService {
         userB.addNotification(chatId, msg);
         usersRepository.save(userB);
 
+        // Сохранении сессии
+        Session.editUser(userB);
+
         return new ResponseEntity<>(new MessageDto(msg, user), HttpStatus.OK);
     }
 
@@ -194,8 +195,40 @@ public class ChatsServiceImpl implements ChatsService {
         userB.removeNotification(chatId, messageId);
         usersRepository.save(userB);
 
+        // Сохранении сессии
+        Session.editUser(userB);
+
         chatsRepository.save(chat);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity checkNotifications(String uuid) {
+        List<Notification> notifications;
+        try {
+            notifications = Session.getUser(uuid);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new RequestException("Пользователь не найден"), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(notifications, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity clearNotifications(String uuid, String chatId) {
+        User user = usersRepository.findByUuid(uuid);
+        if (user == null)
+            return new ResponseEntity<>(new RequestException("Пользователь не найден"), HttpStatus.OK);
+        for (int i = 0; i < user.getNotifications().size(); i++) {
+            if (user.getNotifications().get(i).getChatId().equals( chatId )) {
+                user.getNotifications().remove(i);
+
+                Session.editUser(user);
+                usersRepository.save(user);
+                return new ResponseEntity<>(user.getNotifications(), HttpStatus.OK);
+            }
+        }
+
+        return new ResponseEntity<>(new RequestException("Чат не найден"), HttpStatus.OK);
+    }
 }
