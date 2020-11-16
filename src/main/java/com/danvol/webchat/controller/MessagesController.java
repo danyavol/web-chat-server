@@ -1,6 +1,5 @@
 package com.danvol.webchat.controller;
 
-import com.danvol.webchat.mongo.entity.Chat;
 import com.danvol.webchat.service.ChatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -10,6 +10,7 @@ import com.danvol.webchat.mongo.entity.Message;
 import com.danvol.webchat.mongo.entity.User;
 import com.danvol.webchat.mongo.repository.ChatsRepository;
 import com.danvol.webchat.mongo.repository.UsersRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -137,6 +138,14 @@ public class ChatsServiceImpl implements ChatsService {
         // Сохранение чата в БД
         chatsRepository.save(chat);
 
+        // Добавление уведомления о новом сообщении
+        String userBId = chat.getUsers().get(0).getUserId();
+        if (userBId.equals( user.getUserId() )) userBId = chat.getUsers().get(1).getUserId();
+        User userB = usersRepository.findByUserId(userBId);
+
+        userB.addNotification(chatId, msg);
+        usersRepository.save(userB);
+
         return new ResponseEntity<>(new MessageDto(msg, user), HttpStatus.OK);
     }
 
@@ -176,6 +185,14 @@ public class ChatsServiceImpl implements ChatsService {
         }
         if (flag)
             return new ResponseEntity<>(new RequestException("Сообщение с таким id не найдено"), HttpStatus.OK);
+
+        // Удаление уведомления о новом сообщении
+        String userBId = chat.getUsers().get(0).getUserId();
+        if (userBId.equals( user.getUserId() )) userBId = chat.getUsers().get(1).getUserId();
+        User userB = usersRepository.findByUserId(userBId);
+
+        userB.removeNotification(chatId, messageId);
+        usersRepository.save(userB);
 
         chatsRepository.save(chat);
         return new ResponseEntity<>(HttpStatus.OK);

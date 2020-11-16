@@ -1,9 +1,6 @@
 package com.danvol.webchat.mongo.entity;
 
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-
 import javax.persistence.Entity;
 import java.util.Date;
 
