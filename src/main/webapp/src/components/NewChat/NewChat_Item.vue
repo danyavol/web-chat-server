@@ -34,14 +34,14 @@ export default {
 	methods: {
 		addNewChat() {
 			this.loading = true;
-			this.axios.post(this.$root.url+'chats/new', {}, {params: {myId: localStorage.getItem('userId'), mateLogin: this.user.login}})
+			this.axios.post(this.$root.url+'chats/new', {}, {params: {myUuid: localStorage.getItem('uuid'), mateId: this.user.userId}})
 				.then(response => {
 					if (!response.data.error) {
 						let friends = localStorage.getItem('friends')
 						friends ? friends = JSON.parse(friends) : friends = [];
-						friends.push(response.data.mate.login);
+						friends.push(response.data.mate.userId);
 						localStorage.setItem('friends', JSON.stringify(friends));
-						this.$emit('removeFromSearch', response.data.mate.login);
+						this.$emit('removeFromSearch', response.data.mate.userId);
 					} else {
 						// Неверный id, кто-то изменил localStorage
 						location.reload();

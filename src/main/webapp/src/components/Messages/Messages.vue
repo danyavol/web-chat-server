@@ -2,7 +2,7 @@
 		<div class="container bg-light p-0 position-relative d-flex flex-column" >
 
 			<div class="msg-container-header p-2 d-flex align-items-center flex-row">
-				<span class="avatar color1 ml-2">{{this.mateName[0]}}</span>
+				<span class="avatar ml-2" :class="'color'+mate.colorScheme">{{this.mateName[0]}}</span>
 				<span class="ml-3">@{{ this.mateLogin }}</span>
 				<strong class="ml-2">{{ this.mateName }}</strong>
 			</div>
@@ -42,6 +42,7 @@
 		data () {
 			return {
 				messages: null,
+        mate: null
 			}
 		},
 		beforeMount() {
@@ -63,10 +64,11 @@
 		},
 		methods: {
 			updateMessages() {
-				this.axios.get(this.$root.url+'chats/getOne', {params: {userId: localStorage.getItem('userId'), chatId: this.chatId}})
+				this.axios.get(this.$root.url+'chats/getOne', {params: {uuid: localStorage.getItem('uuid'), chatId: this.chatId}})
 					.then(response => {
 						if (!response.data.error) {
 							this.messages = response.data.messages;
+							this.mate = response.data.mate;
 						} else {
 							location.reload();
 						}
@@ -75,7 +77,7 @@
 			sendMessage() {
 				let input = document.getElementById('message-input');
 				if (input.innerText !== input.getAttribute('placeholder') && !input.innerText.match(/^\s*$/)) {
-					this.axios.post(this.$root.url+'msg/new', {}, {params: {userId: localStorage.getItem('userId'), chatId: this.chatId, message: input.innerText}})
+					this.axios.post(this.$root.url+'msg/new', {}, {params: {uuid: localStorage.getItem('uuid'), chatId: this.chatId, message: input.innerText}})
 						.then(response => {
 							if (!response.data.error) {
 								this.messages.push(response.data);

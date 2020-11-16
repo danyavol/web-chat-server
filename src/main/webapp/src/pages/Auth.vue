@@ -52,9 +52,6 @@ export default {
 					error.innerText = response.data.error;
 				} else {
 					// Успешный вход
-					localStorage.setItem('userId', response.data.userId);
-					localStorage.setItem('name', response.data.name);
-					localStorage.setItem('login', response.data.login);
 					this.$router.push('/')
 				}
 			})

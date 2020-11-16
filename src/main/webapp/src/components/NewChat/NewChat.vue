@@ -50,13 +50,13 @@ export default {
 
 						return response.data.filter(item => {
 							// Фильтрация самого себя
-							if (item.login === localStorage.getItem('login')) {
+							if (item.userId === localStorage.getItem('userId')) {
 								return false
 							}
 
 							// Фильтрация уже добавленных пользователей
 							for (let user of friends) {
-								if (user === item.login) return false;
+								if (user === item.userId) return false;
 							}
 
 							return true;
@@ -67,18 +67,16 @@ export default {
 		},
 		async search(e) {
 			if (!this.isDone) {
-				console.log(1);
 				let result = await this.findUsers(e.target.value);
-				console.log(result);
 				if (e.target.value.length === 0 && result.length === 0) {
 					this.isDone = true;
 				}
 				this.users = result;
 			}
 		},
-		removeFromSearch(login) {
+		removeFromSearch(userId) {
 			this.users = this.users.filter(item => {
-				return item.login !== login;
+				return item.userId !== userId;
 
 			});
 			if (this.users.length === 0) this.isDone = true;

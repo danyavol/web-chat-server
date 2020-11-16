@@ -32,12 +32,12 @@ export default {
 		}
 	},
 	beforeMount() {
-		this.axios.get(this.$root.url+'chats/getAll', {params: {userId: localStorage.getItem('userId')}})
+		this.axios.get(this.$root.url+'chats/getAll', {params: {uuid: localStorage.getItem('uuid')}})
 			.then(response => {
 				if (!response.data.error) {
 					let friends = [];
 					for (let chat of response.data) {
-						friends.push(chat.mate.login);
+						friends.push(chat.mate.userId);
 					}
 					localStorage.setItem('friends', JSON.stringify(friends));
 					this.chatsList = response.data;

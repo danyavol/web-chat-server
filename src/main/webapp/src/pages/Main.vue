@@ -3,7 +3,7 @@
 		<div class="container-lg vh-100 d-flex flex-column">
 			<div class="row header position-relative">
 				<div class="col d-flex align-items-center">
-					<span class="logo ml-2" v-on:click="dropDown" >
+					<span class="logo ml-2">
 						<Logo />
 					</span>
 					<p>Мессенджер</p>
@@ -47,13 +47,12 @@
 		},
 		methods: {
 			logout() {
+        localStorage.removeItem('uuid');
 				localStorage.removeItem('userId');
 				localStorage.removeItem('login');
 				localStorage.removeItem('name');
+        localStorage.removeItem('colorScheme');
 				this.$router.push('/auth');
-			},
-			dropDown() {
-				document.getElementById('hamb').classList.toggle('active');
 			},
 			openMessages(data) {
 				this.mainProps = data;

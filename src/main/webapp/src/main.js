@@ -40,12 +40,19 @@ const routes = [
 		component: Main,
 		beforeEnter: (to, from, next) => {
 			// Проверка авторизован ли пользователь
-			let userId = localStorage.getItem('userId');
-			if ( userId ) {
-				axios.post(url+'users/checkAuth', {},{params: {userId: userId}})
+			let uuid = localStorage.getItem('uuid');
+			if ( uuid ) {
+				axios.post(url+'users/checkAuth', {},{params: {uuid: uuid}})
 					.then(response => {
-						if (!response.data) next('/auth');
-						else next();
+						if (response.data) {
+							localStorage.setItem('uuid', response.data.uuid);
+							localStorage.setItem('userId', response.data.userId);
+							localStorage.setItem('name', response.data.name);
+							localStorage.setItem('login', response.data.login);
+							localStorage.setItem('colorScheme', response.data.colorScheme);
+							next();
+						}
+						else next('/auth');
 					});
 			} else {
 				next('/auth')
