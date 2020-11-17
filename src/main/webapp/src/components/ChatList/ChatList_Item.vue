@@ -10,7 +10,7 @@
 						<p class="card-title mb-1 mate text-truncate"><span>@{{data.mate.login}}</span><strong class="pl-2">{{data.mate.name}}</strong></p>
 						<p class="mb-1 text-secondary text-sm">{{data.messages[0] ? this.$root.getDate(data.messages[0].sendTime) : ''}}</p>
 					</div>
-					<p class="card-text text-truncate text-muted">{{data.messages[0] ? data.messages[0].messageText : 'Нет сообщений'}}</p>
+					<p class="card-text text-truncate text-muted"><span class="text-primary mr-1" v-if="isMe">Вы:</span>{{data.messages[0] ? data.messages[0].messageText : 'Нет сообщений'}}</p>
 				</div>
 			</div>
 		</div>
@@ -22,6 +22,17 @@ export default {
 	props: {
 		data: Object
 	},
+	data() {
+		return {
+			isMe: false
+		}
+	},
+	beforeMount() {
+		this.checkIfMe();
+	},
+	beforeUpdate() {
+		this.checkIfMe();
+	},
 	methods: {
 		openMessages() {
 			this.$emit('openMessages', {
@@ -30,6 +41,9 @@ export default {
 				mateLogin: this.data.mate.login,
 				mateColor: this.data.mate.colorScheme
 			});
+		},
+		checkIfMe() {
+			this.isMe = this.data.messages[0] && this.data.messages[0].sender.userId === localStorage.getItem('userId');
 		}
 	}
 }

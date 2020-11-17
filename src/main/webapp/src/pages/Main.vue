@@ -44,19 +44,22 @@
 				mainProps: null,
 				secondaryComponent: 'ChatList',
 				secondaryProps: null,
-				notifications: []
+				notifications: [],
+				notificationInterval: null
 			}
 		},
 		beforeMount() {
-			setInterval(this.checkNotifications, 1000);
+			this.notificationInterval = setInterval(this.checkNotifications, 1000);
 		},
 		methods: {
 			logout() {
+				clearInterval(this.notificationInterval);
 				localStorage.removeItem('uuid');
 				localStorage.removeItem('userId');
 				localStorage.removeItem('login');
 				localStorage.removeItem('name');
 				localStorage.removeItem('colorScheme');
+				localStorage.removeItem('friends');
 				this.$router.push('/auth');
 			},
 			openMessages(data) {
