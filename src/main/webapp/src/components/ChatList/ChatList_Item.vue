@@ -3,14 +3,17 @@
 		<div class="card-body p-2">
 			<div class="row">
 				<div class="col-2 align-self-center">
-					<span class="avatar" :class="'color'+data.mate.colorScheme">{{data.mate.name[0]}}</span>
+					<span class="avatar" :class="'color'+chat.mate.colorScheme">{{chat.mate.name[0]}}</span>
 				</div>
 				<div class="col-10">
 					<div class="d-flex justify-content-between">
-						<p class="card-title mb-1 mate text-truncate"><span>@{{data.mate.login}}</span><strong class="pl-2">{{data.mate.name}}</strong></p>
-						<p class="mb-1 text-secondary text-sm">{{data.messages[0] ? this.$root.getDate(data.messages[0].sendTime) : ''}}</p>
+						<p class="card-title mb-1 mate text-truncate"><span>@{{chat.mate.login}}</span><strong class="pl-2">{{chat.mate.name}}</strong></p>
+						<p class="mb-1 text-secondary text-sm">{{msg ? this.$root.getDate(msg.sendTime) : ''}}</p>
 					</div>
-					<p class="card-text text-truncate text-muted"><span class="text-primary mr-1" v-if="isMe">Вы:</span>{{data.messages[0] ? data.messages[0].messageText : 'Нет сообщений'}}</p>
+					<div class="d-flex justify-content-between align-items-center">
+						<p class="card-text mb-0 text-truncate text-muted"><span class="text-primary mr-1" v-if="isMe">Вы:</span>{{msg ? msg.messageText : 'Нет сообщений'}}</p>
+						<span class="badge badge-pill badge-primary ml-1" v-if="chat.newMessageCount">{{chat.newMessageCount}}</span>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -20,30 +23,48 @@
 <script>
 export default {
 	props: {
-		data: Object
+		chat: Object
 	},
 	data() {
 		return {
-			isMe: false
+			isMe: false,
+			msg: null
 		}
 	},
 	beforeMount() {
 		this.checkIfMe();
+		this.updateMessage();
 	},
 	beforeUpdate() {
 		this.checkIfMe();
+		this.updateMessage();
 	},
 	methods: {
 		openMessages() {
 			this.$emit('openMessages', {
-				chatId: this.data.chatId,
-				mateName: this.data.mate.name,
-				mateLogin: this.data.mate.login,
-				mateColor: this.data.mate.colorScheme
+				chatId: this.chat.chatId,
+				mateName: this.chat.mate.name,
+				mateLogin: this.chat.mate.login,
+				mateColor: this.chat.mate.colorScheme
 			});
 		},
+		updateMessage() {
+			// if (this.chat && this.chat.messages) {
+				if (this.chat.messages[1]) {
+					this.msg = this.chat.messages[1];
+				} else if (this.chat.messages[0]) {
+					this.msg = this.chat.messages[0];
+				} else {
+					this.msg = null;
+				}
+			// }
+		},
 		checkIfMe() {
-			this.isMe = this.data.messages[0] && this.data.messages[0].sender.userId === localStorage.getItem('userId');
+			if (this.chat.messages[1]) {
+				this.isMe = this.chat.messages[1].senderId !== this.chat.mate.userId;
+			} else if (this.chat.messages[0]) {
+				this.isMe = this.chat.messages[0].sender.userId !== this.chat.mate.userId;
+			}
 		}
 	}
 }

@@ -14,7 +14,7 @@
 				</div>
 			</div>
 			<div class="row flex-grow-1 bg-light">
-				<component class="col-4" v-bind:is="secondaryComponent" v-bind="secondaryProps"
+				<component class="col-4" v-bind:is="secondaryComponent" v-bind="secondaryProps" v-bind:notifications="notifications"
 					@openMessages="openMessages"
 					@openNewChat="openNewChat"
 					@openChatList="openChatList"/>
@@ -49,7 +49,8 @@
 			}
 		},
 		beforeMount() {
-			this.notificationInterval = setInterval(this.checkNotifications, 1000);
+			this.checkNotifications();
+			this.notificationInterval = setInterval(this.checkNotifications, 500);
 		},
 		methods: {
 			logout() {
