@@ -27,7 +27,8 @@ export default {
 			this.$emit('openMessages', {
 				chatId: this.data.chatId,
 				mateName: this.data.mate.name,
-				mateLogin: this.data.mate.login
+				mateLogin: this.data.mate.login,
+				mateColor: this.data.mate.colorScheme
 			});
 		}
 	}

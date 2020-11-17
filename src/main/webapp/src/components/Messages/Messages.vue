@@ -2,7 +2,7 @@
 		<div class="container bg-light p-0 position-relative d-flex flex-column" >
 
 			<div class="msg-container-header p-2 d-flex align-items-center flex-row">
-				<span class="avatar ml-2" :class="'color'+mate.colorScheme">{{this.mateName[0]}}</span>
+				<span class="avatar ml-2" :class="'color'+mateColor">{{this.mateName[0]}}</span>
 				<span class="ml-3">@{{ this.mateLogin }}</span>
 				<strong class="ml-2">{{ this.mateName }}</strong>
 			</div>
@@ -11,7 +11,8 @@
 				<Loading v-if="messages == null" />
 				<div class="position-absolute d-flex flex-column msg-wrapper px-3" v-if="messages != null">
 					<p class="text-center text-secondary" v-if="messages.length === 0">Нет сообщений</p>
-					<Message v-bind:key="item.id" v-for="item in messages" v-bind:data="item" v-bind:mateName="mateName"/>
+					<Message v-bind:key="item.messageId" v-for="item in messages" v-bind:msg="item" v-bind:mateName="mateName" @delMsg="deleteMessage"/>
+					<Message v-bind:key="item.id" v-for="item in localMessages" v-bind:localMsg="item" v-bind:mateName="mateName"/>
 				</div>
 			</div>
 
@@ -37,12 +38,14 @@
 		props: {
 			chatId: String,
 			mateLogin: String,
-			mateName: String
+			mateName: String,
+			mateColor: Number
 		},
 		data () {
 			return {
-				messages: null,
-        mate: null
+				messages: [],
+				localMessages: [],
+				mate: null
 			}
 		},
 		beforeMount() {
@@ -60,6 +63,12 @@
 						msg.scrollTo(0, msg.scrollHeight);
 					},0);
 				}
+			},
+			localMessages() {
+				setTimeout(() => {
+					let msg = document.querySelector('#msg-container');
+					msg.scrollTo(0, msg.scrollHeight);
+				},0);
 			}
 		},
 		methods: {
@@ -77,17 +86,37 @@
 			sendMessage() {
 				let input = document.getElementById('message-input');
 				if (input.innerText !== input.getAttribute('placeholder') && !input.innerText.match(/^\s*$/)) {
-					this.axios.post(this.$root.url+'msg/new', {}, {params: {uuid: localStorage.getItem('uuid'), chatId: this.chatId, message: input.innerText}})
+					let localMsg = {messageText: input.innerText, sender: {name: localStorage.getItem('name')}};
+					this.localMessages.push(localMsg);
+					input.innerText = '';
+
+					this.axios.post(this.$root.url+'msg/new', {}, {params: {uuid: localStorage.getItem('uuid'), chatId: this.chatId, message: localMsg.messageText}})
 						.then(response => {
 							if (!response.data.error) {
 								this.messages.push(response.data);
-								input.innerText = '';
+								this.localMessages = [];
 								this.$emit('newMessage', {chatId: this.chatId, message: response.data});
 							} else {
 								location.reload();
 							}
 						});
 				}
+			},
+			deleteMessage(msgId) {
+				this.axios.delete(this.$root.url+'msg/delete', {params: {uuid: localStorage.getItem('uuid'), chatId: this.chatId, messageId: msgId}})
+					.then(response => {
+						if (!response.data.error) {
+							this.messages = this.messages.filter(item => {
+								return item.messageId !== msgId;
+							});
+							let lastElem = [];
+							if (this.messages.length > 0) lastElem = this.messages[this.messages.length-1];
+
+							this.$emit('newMessage', {chatId: this.chatId, message: lastElem});
+						} else {
+							location.reload();
+						}
+					});
 			},
 			keyPress(e) {
 				if (!e.shiftKey && e.key === 'Enter') {

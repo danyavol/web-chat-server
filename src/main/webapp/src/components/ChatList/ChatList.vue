@@ -72,7 +72,11 @@ export default {
 			let chats = JSON.parse(JSON.stringify(this.chatsList));
 			for (let i = 0; i < chats.length; i++) {
 				if (chats[i].chatId === newMsg.chatId) {
-					chats[i].messages[0] = newMsg.message;
+					if (newMsg.message.length === 0) {
+						chats[i].messages = [];
+					} else {
+						chats[i].messages[0] = newMsg.message;
+					}
 					this.chatsList = chats;
 					break;
 				}
