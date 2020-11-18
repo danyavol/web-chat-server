@@ -1,15 +1,15 @@
 <template>
-		<div class="msg_item card w-75" v-bind:class="{'ml-auto': this.isMe}">
+		<div class="msg_item card w-75 shadow-sm" v-bind:class="{'ml-auto': this.isMe}">
 			<div class="card-body p-2">
 				<div class="msg_header mb-2 d-flex justify-content-between">
-					<p class="text-secondary mb-0">{{obj.sender.name}}</p>
+					<p class="text-secondary mb-0">{{mateName}}</p>
 					<div class="d-flex align-items-center">
 						<span class="text-secondary text-sm" v-if="!isLoading">{{this.$root.getDate(obj.sendTime)}}</span>
 						<div class="spinner-border spinner-border-sm messageLoading text-secondary" v-if="isLoading" role="status">
 							<span class="sr-only">Loading...</span>
 						</div>
 						<span v-on:click="confirmDelete" class="position-relative" v-if="isMe && !isLoading">
-							<font-awesome-icon :icon="['far', 'trash-alt']" class="text-secondary ml-3 deleteMsg"></font-awesome-icon>
+							<font-awesome-icon :icon="['far', 'trash-alt']" class="text-secondary ml-3 deleteMsg"/>
 							<div class="confirmDelete position-absolute text-sm d-none" v-on:click="deleteMessage">Удалить сообщение?</div>
 						</span>
 					</div>
@@ -25,7 +25,8 @@
 	export default {
 		props: {
 			msg: Object,
-			localMsg: Object
+			localMsg: Object,
+			mateName: String
 		},
 		data () {
 			return {
@@ -79,7 +80,7 @@
 
 <style lang="scss">
 	.msg_item {
-		box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+		//box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 		margin-bottom: 10px;
 
 		.msg_content pre{

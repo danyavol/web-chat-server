@@ -75,7 +75,9 @@
 				</form>
 			</div>
 		</div>
-		<p class="text-secondary text-center position-absolute" style="bottom: 0; width: 300px; left: Calc(50% - 150px); font-size: 0.875rem; letter-spacing: 1px;">Разработал Волосюк Даниил</p>
+		<p class="text-secondary text-center position-absolute" style="bottom: 0; width: 300px; left: Calc(50% - 150px); font-size: 0.875rem; letter-spacing: 1px;">
+			Разработал<font-awesome-icon :icon="['fas', 'code']" class="text-secondary mx-2"/>Волосюк Даниил
+		</p>
 	</div>
 </template>
 

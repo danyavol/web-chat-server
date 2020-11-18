@@ -12,7 +12,7 @@
 				<div class="position-absolute d-flex flex-column msg-wrapper px-3" v-if="messages != null">
 					<p class="text-center text-secondary" v-if="messages.length === 0">Нет сообщений</p>
 					<Message v-bind:key="item.messageId" v-for="item in messages" v-bind:msg="item" v-bind:mateName="mateName" @delMsg="deleteMessage"/>
-					<Message v-bind:key="item.id" v-for="item in localMessages" v-bind:localMsg="item" v-bind:mateName="mateName"/>
+					<Message v-bind:key="index" v-for="(item, index) in localMessages" v-bind:localMsg="item" v-bind:mateName="mateName"/>
 				</div>
 			</div>
 
@@ -36,6 +36,8 @@
 
 	export default {
 		props: {
+			chats: Array,
+
 			chatId: String,
 			mateLogin: String,
 			mateName: String,
@@ -44,7 +46,8 @@
 		data () {
 			return {
 				messages: [],
-				localMessages: [],
+				localMessages: {},
+				localMessageCounter: 0,
 				mate: null
 			}
 		},
@@ -53,7 +56,9 @@
 		},
 		watch: {
 			chatId() {
-				this.messages = null;
+				this.updateMessages();
+			},
+			chats() {
 				this.updateMessages();
 			},
 			messages() {
@@ -73,28 +78,27 @@
 		},
 		methods: {
 			updateMessages() {
-				this.axios.get(this.$root.url+'chats/getOne', {params: {uuid: localStorage.getItem('uuid'), chatId: this.chatId}})
-					.then(response => {
-						if (!response.data.error) {
-							this.messages = response.data.messages;
-							this.mate = response.data.mate;
-						} else {
-							location.reload();
-						}
-					});
+				for (let chat of this.chats) {
+					if (chat.chatId === this.chatId) {
+						this.messages = chat.messages;
+					}
+				}
 			},
 			sendMessage() {
 				let input = document.getElementById('message-input');
 				if (input.innerText !== input.getAttribute('placeholder') && !input.innerText.match(/^\s*$/)) {
 					let localMsg = {messageText: input.innerText, sender: {name: localStorage.getItem('name')}};
-					this.localMessages.push(localMsg);
+
+					let localMsgId = this.localMessageCounter++;
+					this.$set(this.localMessages, 'i'+localMsgId, localMsg);
+
 					input.innerText = '';
 
 					this.axios.post(this.$root.url+'msg/new', {}, {params: {uuid: localStorage.getItem('uuid'), chatId: this.chatId, message: localMsg.messageText}})
 						.then(response => {
 							if (!response.data.error) {
-								this.messages.push(response.data);
-								this.localMessages = [];
+								delete this.localMessages['i'+localMsgId];
+
 								this.$emit('newMessage', {chatId: this.chatId, message: response.data});
 							} else {
 								location.reload();
@@ -106,13 +110,7 @@
 				this.axios.delete(this.$root.url+'msg/delete', {params: {uuid: localStorage.getItem('uuid'), chatId: this.chatId, messageId: msgId}})
 					.then(response => {
 						if (!response.data.error) {
-							this.messages = this.messages.filter(item => {
-								return item.messageId !== msgId;
-							});
-							let lastElem = [];
-							if (this.messages.length > 0) lastElem = this.messages[this.messages.length-1];
-
-							this.$emit('newMessage', {chatId: this.chatId, message: lastElem});
+							this.$emit('delMessage', {chatId: this.chatId, messageId: msgId});
 						} else {
 							location.reload();
 						}

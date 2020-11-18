@@ -12,8 +12,8 @@ import java.util.List;
 @Data
 public class Notification {
     private String chatId;
-    private List<Message> newMsg;
-    private List<Message> deletedMsg;
+    private List<NotificationMessage> newMsg;
+    private List<NotificationMessage> deletedMsg;
 
     public Notification(String chatId, Message message, String type) {
         this.chatId = chatId;
@@ -22,10 +22,10 @@ public class Notification {
 
         if (type.equals("new")) {
             // Если добавляется в уведомление новое сообщение
-            this.newMsg.add(message);
+            this.newMsg.add(new NotificationMessage(message));
         } else if (type.equals("deleted")) {
             // Если добавляется в уведомления удаленное сообщение
-            this.deletedMsg.add(message);
+            this.deletedMsg.add(new NotificationMessage(message));
         }
     }
 

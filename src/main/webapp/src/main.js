@@ -6,11 +6,11 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUserPlus, faShare, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faUserPlus, faShare, faPlus, faCode } from '@fortawesome/free-solid-svg-icons'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faUserPlus, faShare, faPlus, faTrashAlt)
+library.add(faUserPlus, faShare, faPlus, faTrashAlt, faCode)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

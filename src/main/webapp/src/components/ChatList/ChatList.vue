@@ -48,7 +48,7 @@ export default {
 		sortChats() {
 			this.chats = this.chats.sort((a, b) => {
 				if (a.messages.length !== 0 && b.messages.length !== 0){
-					return (new Date(b.messages[0].sendTime)).getTime() - (new Date(a.messages[0].sendTime)).getTime();
+					return (new Date(b.messages[b.messages.length-1].sendTime)).getTime() - (new Date(a.messages[a.messages.length-1].sendTime)).getTime();
 				}
 				if (a.messages.length === 0 && b.messages.length === 0) return 0;
 				if (a.messages.length !== 0 && b.messages.length === 0) return -1;

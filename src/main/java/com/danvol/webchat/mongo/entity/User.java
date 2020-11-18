@@ -40,7 +40,7 @@ public class User {
         for (int i = 0; i < this.notifications.size(); i++) {
             if (this.notifications.get(i).getChatId().equals( chatId )) {
                 // Чат существует, добавляем туда новое сообщение
-                this.notifications.get(i).getNewMsg().add(message);
+                this.notifications.get(i).getNewMsg().add(new NotificationMessage(message));
                 return;
             }
         }
@@ -52,7 +52,7 @@ public class User {
         for (int i = 0; i < this.notifications.size(); i++) {
             if (this.notifications.get(i).getChatId().equals( chatId )) {
                 // Чат существует, добавляем туда удаленное сообщение
-                this.notifications.get(i).getDeletedMsg().add(message);
+                this.notifications.get(i).getDeletedMsg().add(new NotificationMessage(message));
                 return;
             }
         }

@@ -17,15 +17,12 @@ public class ChatDto {
 
     private String chatId;
     private List<MessageDto> messages;
-    private MessageDto lastMessage;
     private ChatUserDto mate;
 
     public ChatDto(Chat chat, User userA, User userB, String type) {
         if (type.equals("getAllChats") || type.equals("getChatMessages")) {
             this.chatId = chat.getChatId();
             this.messages = createMessageDto(chat, userA, userB, false);
-            if (this.messages.size() > 0)
-                this.lastMessage = this.messages.get(this.messages.size()-1);
             this.mate = new ChatUserDto(userB);
         }
     }

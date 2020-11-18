@@ -8,7 +8,7 @@
 				<div class="col-md-10">
 					<div class="d-flex justify-content-between">
 						<p class="card-title mb-1 mate text-truncate"><span>@{{chat.mate.login}}</span><strong class="pl-2">{{chat.mate.name}}</strong></p>
-						<p class="mb-1 text-secondary text-sm">{{chat.messages[0] ? this.$root.getDate(chat.messages[0].sendTime) : ''}}</p>
+						<p class="mb-1 text-secondary text-sm">{{chat.messages.length ? this.$root.getDate(chat.messages[chat.messages.length-1].sendTime) : ''}}</p>
 					</div>
 					<div class="d-flex justify-content-between align-items-center">
 						<p class="card-text mb-0 text-truncate text-muted"><span class="text-primary mr-1" v-if="isMe">Вы:</span>{{chat.messages.length ? chat.messages[chat.messages.length-1].messageText : 'Нет сообщений'}}</p>

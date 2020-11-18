@@ -20,7 +20,8 @@
 					@openChatList="openChatList"/>
 
 				<component class="col-8" :is="mainComponent" v-bind="mainProps" :chats="chats" :isLoading="isChatsLoading"
-					@newMessage="newMessage"/>
+					@newMessage="newMessage"
+					@delMessage="delMessage"/>
 			</div>
 		</div>
 	</div>
@@ -84,7 +85,26 @@
 				this.secondaryComponent = "ChatList";
 			},
 			newMessage(message) {
-				this.secondaryProps = {newMessage: message};
+				for (let i = 0; i < this.chats.length; i++) {
+					if (this.chats[i].chatId === message.chatId) {
+						let newChat = JSON.parse(JSON.stringify(this.chats[i]));
+						newChat.messages.push(message.message);
+						this.$set(this.chats, i, newChat);
+					}
+				}
+			},
+			delMessage(message) {
+				for (let i = 0; i < this.chats.length; i++) {
+					if (this.chats[i].chatId === message.chatId) {
+						for (let j = this.chats[i].messages.length-1; j >= 0; j--) {
+							if (this.chats[i].messages[j].messageId === message.messageId) {
+								let newChat = JSON.parse(JSON.stringify(this.chats[i]));
+								newChat.messages.splice(j, 1);
+								this.$set(this.chats, i, newChat);
+							}
+						}
+					}
+				}
 			},
 			getAllChats() {
 				this.axios.get(this.$root.url+'chats/getAll', {params: {uuid: localStorage.getItem('uuid')}})
@@ -150,7 +170,7 @@
 												!newChat ? newChat = JSON.parse(JSON.stringify(this.chats[j])) : null;
 												newChat.messages.splice(k, 1);
 												break;
-											} else if (this.chats[j].messages[k].messageId > deletedMsg.messageId) {
+											} else if (this.chats[j].messages[k].messageId < deletedMsg.messageId) {
 												break;
 											}
 										}
@@ -165,8 +185,8 @@
 
 									if (newChat) {
 										this.$set(this.chats, j, newChat);
-										console.log(newChat);
-										console.log('-------------- State changed! --------------');
+										// console.log(newChat);
+										// console.log('-------------- State changed! --------------');
 									}
 
 								}

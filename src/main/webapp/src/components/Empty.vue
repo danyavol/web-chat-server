@@ -1,6 +1,6 @@
 <template>
 	<div class="empty position-relative">
-		<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+		<svg version="1.1" id="logo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 			viewBox="0 0 28.46 28.46" style="enable-background:new 0 0 28.46 28.46;" xml:space="preserve">
 			<g>
 				<path d="M8.825,17.157c-3.564-0.992-6.09-3.074-6.09-5.423c0-3.274,4.895-6.04,10.69-6.04
@@ -15,7 +15,9 @@
 					c0,1.616-2.638,3.419-6.424,3.419C17.65,21.309,16.239,20.954,15.148,20.435z"/>
 			</g>
 		</svg>
-		<p class="text-secondary text-center position-absolute" style="bottom: 0; width: 300px; left: Calc(50% - 150px); font-size: 0.875rem; letter-spacing: 1px;">Разработал Волосюк Даниил</p>
+		<p class="text-secondary text-center position-absolute" style="bottom: 0; width: 300px; left: Calc(50% - 150px); font-size: 0.875rem; letter-spacing: 1px;">
+			Разработал<font-awesome-icon :icon="['fas', 'code']" class="text-secondary mx-2"/>Волосюк Даниил
+		</p>
 	</div>
 
 </template>
@@ -26,11 +28,23 @@
 		justify-content: center;
 		align-items: center;
 		padding-bottom: 10%;
-		svg {
+		#logo {
 			width: 50%;
 			path {
 				fill: #fde0e0; //#e9e9eb;
 			}
+		}
+	}
+
+
+	@media (max-width: 992px) {
+		.empty #logo {
+			width: 60%;
+		}
+	}
+	@media (max-width: 768px) {
+		.empty #logo {
+			width: 70%;
 		}
 	}
 </style>
