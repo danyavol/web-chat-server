@@ -8,22 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
 @NoArgsConstructor
+@Data
 public class Notification {
     private String chatId;
-    private List<Message> messages;
+    private List<Message> newMsg;
+    private List<Message> deletedMsg;
 
-    public Notification(String chatId, List<Message> messages) {
+    public Notification(String chatId, Message message, String type) {
         this.chatId = chatId;
-        this.messages = messages;
-    }
+        if (this.newMsg == null) this.newMsg = new ArrayList<>();
+        if (this.deletedMsg == null) this.deletedMsg = new ArrayList<>();
 
-    public Notification(String chatId, Message message) {
-        this.chatId = chatId;
-        if (this.messages == null) {
-            this.messages = new ArrayList<>();
+        if (type.equals("new")) {
+            // Если добавляется в уведомление новое сообщение
+            this.newMsg.add(message);
+        } else if (type.equals("deleted")) {
+            // Если добавляется в уведомления удаленное сообщение
+            this.deletedMsg.add(message);
         }
-        this.messages.add(message);
     }
+
 }

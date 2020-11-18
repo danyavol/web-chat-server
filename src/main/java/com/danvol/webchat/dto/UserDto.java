@@ -14,7 +14,6 @@ public class UserDto {
     private String uuid;
     private String name;
     private String login;
-    private String password;
     private int colorScheme;
 
     public UserDto(User obj, String type) {

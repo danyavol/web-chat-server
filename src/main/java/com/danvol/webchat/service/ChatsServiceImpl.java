@@ -127,10 +127,9 @@ public class ChatsServiceImpl implements ChatsService {
 
         List<Message> messages = chat.getMessages();
         // Создание messageId
-        int lastId = 0;
-        if (messages.size() != 0)
-            lastId = messages.get(messages.size()-1).getMessageId();
-        msg.setMessageId(++lastId);
+        int msgId = chat.getMessagesCount() + 1;
+        chat.setMessagesCount(msgId);
+        msg.setMessageId(msgId);
         messages.add( msg );
 
         // Сохранение чата в БД
@@ -141,7 +140,7 @@ public class ChatsServiceImpl implements ChatsService {
         if (userBId.equals( user.getUserId() )) userBId = chat.getUsers().get(1).getUserId();
         User userB = usersRepository.findByUserId(userBId);
 
-        userB.addNotification(chatId, msg);
+        userB.addNewMsg(chatId, msg);
         usersRepository.save(userB);
 
         // Сохранении сессии
@@ -170,11 +169,13 @@ public class ChatsServiceImpl implements ChatsService {
 
         // Удаление сообщения
         flag = true;
+        Message deletedMsg = null;
         for (int i = 0; i < chat.getMessages().size(); i++) {
             if (messageId == chat.getMessages().get(i).getMessageId()) {
 
                 // Проверка принадлежит ли это сообщение этому пользователю
                 if (chat.getMessages().get(i).getSenderId().equals( user.getUserId() )) {
+                    deletedMsg = chat.getMessages().get(i);
                     chat.getMessages().remove(i);
                     flag = false;
                     break;
@@ -187,12 +188,12 @@ public class ChatsServiceImpl implements ChatsService {
         if (flag)
             return new ResponseEntity<>(new RequestException("Сообщение с таким id не найдено"), HttpStatus.OK);
 
-        // Удаление уведомления о новом сообщении
+        // Добавление уведомления об удаленном сообщении
         String userBId = chat.getUsers().get(0).getUserId();
         if (userBId.equals( user.getUserId() )) userBId = chat.getUsers().get(1).getUserId();
         User userB = usersRepository.findByUserId(userBId);
 
-        userB.removeNotification(chatId, messageId);
+        userB.addDeletedMsg(chatId, deletedMsg);
         usersRepository.save(userB);
 
         // Сохранении сессии
@@ -219,16 +220,12 @@ public class ChatsServiceImpl implements ChatsService {
         User user = usersRepository.findByUuid(uuid);
         if (user == null)
             return new ResponseEntity<>(new RequestException("Пользователь не найден"), HttpStatus.OK);
-        for (int i = 0; i < user.getNotifications().size(); i++) {
-            if (user.getNotifications().get(i).getChatId().equals( chatId )) {
-                user.getNotifications().remove(i);
 
-                Session.editUser(user);
-                usersRepository.save(user);
-                return new ResponseEntity<>(user.getNotifications(), HttpStatus.OK);
-            }
-        }
+        user.clearNotifications(chatId);
 
-        return new ResponseEntity<>(new RequestException("Чат не найден"), HttpStatus.OK);
+        Session.editUser(user);
+        usersRepository.save(user);
+        return new ResponseEntity<>(user.getNotifications(), HttpStatus.OK);
     }
+
 }

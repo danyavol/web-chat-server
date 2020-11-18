@@ -1,17 +1,12 @@
 package com.danvol.webchat.dto;
 
 import com.danvol.webchat.mongo.entity.Chat;
-import com.danvol.webchat.mongo.entity.Message;
 import com.danvol.webchat.mongo.entity.User;
-import com.danvol.webchat.mongo.repository.UsersRepository;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.Entity;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -22,16 +17,15 @@ public class ChatDto {
 
     private String chatId;
     private List<MessageDto> messages;
+    private MessageDto lastMessage;
     private ChatUserDto mate;
 
     public ChatDto(Chat chat, User userA, User userB, String type) {
-        if (type.equals("getAllChats")) {
-            this.chatId = chat.getChatId();
-            this.messages = createMessageDto(chat, userA, userB, true);
-            this.mate = new ChatUserDto(userB);
-        } else if (type.equals("getChatMessages")) {
+        if (type.equals("getAllChats") || type.equals("getChatMessages")) {
             this.chatId = chat.getChatId();
             this.messages = createMessageDto(chat, userA, userB, false);
+            if (this.messages.size() > 0)
+                this.lastMessage = this.messages.get(this.messages.size()-1);
             this.mate = new ChatUserDto(userB);
         }
     }

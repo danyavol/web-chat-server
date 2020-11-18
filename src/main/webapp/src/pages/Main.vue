@@ -55,12 +55,13 @@
 		methods: {
 			logout() {
 				clearInterval(this.notificationInterval);
-				localStorage.removeItem('uuid');
-				localStorage.removeItem('userId');
-				localStorage.removeItem('login');
-				localStorage.removeItem('name');
-				localStorage.removeItem('colorScheme');
-				localStorage.removeItem('friends');
+				localStorage.clear();
+				// localStorage.removeItem('uuid');
+				// localStorage.removeItem('userId');
+				// localStorage.removeItem('login');
+				// localStorage.removeItem('name');
+				// localStorage.removeItem('colorScheme');
+				// localStorage.removeItem('friends');
 				this.$router.push('/auth');
 			},
 			openMessages(data) {

@@ -36,33 +36,37 @@ public class User {
         this.colorScheme = (int) (Math.random() * ((max - min) + 1)) + min;
     }
 
-    public void addNotification(String chatId, Message message) {
+    public void addNewMsg(String chatId, Message message) {
         for (int i = 0; i < this.notifications.size(); i++) {
             if (this.notifications.get(i).getChatId().equals( chatId )) {
                 // Чат существует, добавляем туда новое сообщение
-                this.notifications.get(i).getMessages().add(message);
+                this.notifications.get(i).getNewMsg().add(message);
                 return;
             }
         }
         // Чат не существует, создаем новый
-        this.notifications.add(new Notification(chatId, message));
+        this.notifications.add(new Notification(chatId, message, "new"));
     }
 
-    public void removeNotification(String chatId, int messageId) {
-
+    public void addDeletedMsg(String chatId, Message message) {
         for (int i = 0; i < this.notifications.size(); i++) {
             if (this.notifications.get(i).getChatId().equals( chatId )) {
-
-                for (int j = 0; j < this.notifications.get(i).getMessages().size(); j++) {
-                    if (this.notifications.get(i).getMessages().get(j).getMessageId() == messageId) {
-                        // Сообщение найдено, удаляем его
-                        this.notifications.get(i).getMessages().remove(j);
-                        return;
-                    }
-                }
-
+                // Чат существует, добавляем туда удаленное сообщение
+                this.notifications.get(i).getDeletedMsg().add(message);
+                return;
             }
         }
-
+        // Чат не существует, создаем новый
+        this.notifications.add(new Notification(chatId, message, "deleted"));
     }
+
+    public void clearNotifications(String chatId) {
+        for (int i = 0; i < this.notifications.size(); i++) {
+            if (this.notifications.get(i).getChatId().equals( chatId )) {
+                // Нужный чат найден, удаляем уведомления
+                this.notifications.remove(i);
+            }
+        }
+    }
+
 }

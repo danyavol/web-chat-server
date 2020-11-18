@@ -1,10 +1,13 @@
 package com.danvol.webchat.mongo.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
 import java.util.Date;
 
 @Entity
+@NoArgsConstructor
 @Data
 public class Message {
     private int messageId;

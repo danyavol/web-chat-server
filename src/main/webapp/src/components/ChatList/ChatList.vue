@@ -70,29 +70,54 @@ export default {
 		},
 		handleNotifications() {
 			if (this.chatsList && this.notifications) {
-				// console.log(this.chatsList, this.notifications);
 				this.notifications.forEach(chat_notification => {
 					for (let i = 0; i < this.chatsList.length; i++) {
+						// Чат найден, обрабатываем уведомления
 						if (this.chatsList[i].chatId === chat_notification.chatId) {
+
+							// Создания массива новых сообщений учитывая удаленные сообщения
+							let newMessages = [];
+							for (let newMsg of chat_notification.newMsg) {
+								let flag = true;
+								for (let deletedMsg of chat_notification.deletedMsg) {
+									if (newMsg.messageId === deletedMsg.messageId) {
+										flag = false;
+										break;
+									}
+								}
+								if (flag) newMessages.push(newMsg);
+							}
+
 							let newChats;
 
 							// Изменение количества новых сообщений
-							if (this.chatsList[i].newMessageCount !== chat_notification.messages.length) {
+							if (this.chatsList[i].newMessageCount !== newMessages.length) {
 								newChats = JSON.parse(JSON.stringify(this.chatsList));
-								newChats[i].newMessageCount = chat_notification.messages.length;
+								newChats[i].newMessageCount = newMessages.length;
 							}
 
 							// Изменение последнего сообщения в чате
-							if (chat_notification.messages.length > 0) {
-								let lastMsg = chat_notification.messages[chat_notification.messages.length - 1];
-								// ЕСЛИ совпало [0] и [1] пустое ИЛИ совпало [1] ИЛИ [0] и [1] нету
-								if ( (this.chatsList[i].messages[0] && this.chatsList[i].messages[0].messageId !== lastMsg.messageId && !this.chatsList[i].messages[1]) ||
-									(this.chatsList[i].messages[1] && this.chatsList[i].messages[1].messageId !== lastMsg.messageId) ) {
+							/*
+								Последнее сообщение находится в массиве messages на 0 индексе
+								если в уведомлениях есть сообщение, то оно помещается на 0 индекс,
+								а старое сообщение с 0 индекса перемещается на 1.
+								Если уведомлений нет, с 1 индекса возвращается на 0
+							 */
+							if (newMessages.length > 0) {
+								let lastMsg = newMessages[newMessages.length - 1];
+
+								if (!this.chatsList[i].messages[0].senderId && this.chatsList[i].messages[0].sender.userId === lastMsg.senderId) {
 									!newChats ? newChats = JSON.parse(JSON.stringify(this.chatsList)) : null;
-									newChats[i].messages[1] = lastMsg;
+									newChats[i].messages[1] = JSON.parse(JSON.stringify(newChats[i].messages[0]));
+									newChats[i].messages[0] = lastMsg;
+								} else if (this.chatsList[i].messages[0].senderId && this.chatsList[i].messages[0].senderId !== lastMsg.senderId) {
+									!newChats ? newChats = JSON.parse(JSON.stringify(this.chatsList)) : null;
+									newChats[i].messages[0] = lastMsg;
 								}
+
 							} else if (this.chatsList[i].messages[1]) {
 								!newChats ? newChats = JSON.parse(JSON.stringify(this.chatsList)) : null;
+								newChats[i].messages[0] = JSON.parse(JSON.stringify(newChats[i].messages[1]));
 								delete newChats[i].messages[1];
 							}
 
