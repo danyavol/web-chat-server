@@ -2,7 +2,7 @@
 		<div class="container bg-light p-0 position-relative d-flex flex-column" >
 
 			<div class="msg-container-header p-2 d-flex align-items-center flex-row">
-				<span class="avatar ml-2" :class="'color'+mateColor">{{this.mateName[0]}}</span>
+				<span class="avatar ml-3" :class="'color'+mateColor">{{this.mateName[0]}}</span>
 				<span class="ml-3">@{{ this.mateLogin }}</span>
 				<strong class="ml-2">{{ this.mateName }}</strong>
 			</div>

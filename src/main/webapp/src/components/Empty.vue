@@ -1,5 +1,5 @@
 <template>
-	<div class="empty">
+	<div class="empty position-relative">
 		<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 			viewBox="0 0 28.46 28.46" style="enable-background:new 0 0 28.46 28.46;" xml:space="preserve">
 			<g>
@@ -15,6 +15,7 @@
 					c0,1.616-2.638,3.419-6.424,3.419C17.65,21.309,16.239,20.954,15.148,20.435z"/>
 			</g>
 		</svg>
+		<p class="text-secondary text-center position-absolute" style="bottom: 0; width: 300px; left: Calc(50% - 150px); font-size: 0.875rem; letter-spacing: 1px;">Разработал Волосюк Даниил</p>
 	</div>
 
 </template>

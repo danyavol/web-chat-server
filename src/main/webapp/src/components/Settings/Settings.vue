@@ -1,10 +1,10 @@
 <template>
-	<div class="p-0">
-		<div class="settings-top bg-white border-bottom d-flex align-items-center" style="height: 60px">
-			<div class="d-flex align-items-center ml-4">
-				<span class="avatar" :class="'color'+colorScheme">{{name[0]}}</span>
-				<span class="px-2">@{{ login }}</span>
-				<strong>{{ name }}</strong>
+	<div class="p-0 position-relative">
+		<div class="settings-top bg-white p-2 border-bottom d-flex align-items-center" style="height: 60px">
+			<div class="d-flex align-items-center">
+				<span class="avatar ml-3" :class="'color'+colorScheme">{{name[0]}}</span>
+				<span class="ml-3">@{{ login }}</span>
+				<strong class="ml-2">{{ name }}</strong>
 			</div>
 		</div>
 		<div class="p-3">
@@ -24,8 +24,8 @@
 					<hr>
 
 					<div class="row mb-2 align-items-center">
-						<div class="col-2">Аватар</div>
-						<div class="col-10">
+						<div class="col-3 col-lg-2">Аватар</div>
+						<div class="col">
 							<div class="d-flex avatar-select-container flex-wrap">
 							<span v-for="n in 8" :key="n"
 								:class="'avatar-select color'+n + (n == colorScheme ? ' selected' : '')"
@@ -37,8 +37,8 @@
 					</div>
 
 					<div class="row mb-2 align-items-center">
-						<div class="col-2">Имя</div>
-						<div class="col-10">
+						<div class="col-3 col-lg-2">Имя</div>
+						<div class="col">
 							<input type="text" class="form-control" id="settingsName" placeholder="Имя" :value="name">
 							<div class="invalid-feedback">
 								С большой буквы, не менее 3-х символов.
@@ -47,8 +47,8 @@
 					</div>
 
 					<div class="row mb-2 align-items-center">
-						<div class="col-2">Логин</div>
-						<div class="col-10">
+						<div class="col-3 col-lg-2">Логин</div>
+						<div class="col">
 							<input type="text" class="form-control" id="settingsLogin" placeholder="Логин" :value="login">
 							<div class="invalid-feedback">
 								Маленькие латинские буквы или цифры, не менее 4-х символов, первый символ не цифра.
@@ -57,8 +57,8 @@
 					</div>
 
 					<div class="row align-items-center">
-						<div class="col-2">Пароль</div>
-						<div class="col-10">
+						<div class="col-3 col-lg-2">Пароль</div>
+						<div class="col">
 							<input type="password" class="form-control" id="settingsPassword" placeholder="Новый пароль">
 							<div class="invalid-feedback">
 								Не менее 4-х латинский букв или цифр.
@@ -68,13 +68,14 @@
 
 					<div class="d-flex justify-content-center mt-3 position-relative">
 						<Loading v-if="isLoading" class="position-absolute" style="right: 10px; bottom: 0"/>
-						<input type="button" id="settingsSubmit" class="btn btn-outline-success" :disabled="isLoading" value="Сохранить изменения">
+						<input type="button" id="settingsSubmit" class="btn btn-outline-primary" :disabled="isLoading" value="Сохранить изменения">
 					</div>
 
 
 				</form>
 			</div>
 		</div>
+		<p class="text-secondary text-center position-absolute" style="bottom: 0; width: 300px; left: Calc(50% - 150px); font-size: 0.875rem; letter-spacing: 1px;">Разработал Волосюк Даниил</p>
 	</div>
 </template>
 

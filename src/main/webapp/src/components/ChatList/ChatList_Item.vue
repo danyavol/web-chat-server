@@ -2,16 +2,16 @@
 	<div class="chat_item card shadow-sm" style="max-width: 100%" @click="openMessages">
 		<div class="card-body p-2">
 			<div class="row">
-				<div class="col-2 align-self-center">
+				<div class="col-2 align-self-center d-none d-md-block">
 					<span class="avatar" :class="'color'+chat.mate.colorScheme">{{chat.mate.name[0]}}</span>
 				</div>
-				<div class="col-10">
+				<div class="col-md-10">
 					<div class="d-flex justify-content-between">
 						<p class="card-title mb-1 mate text-truncate"><span>@{{chat.mate.login}}</span><strong class="pl-2">{{chat.mate.name}}</strong></p>
 						<p class="mb-1 text-secondary text-sm">{{chat.messages[0] ? this.$root.getDate(chat.messages[0].sendTime) : ''}}</p>
 					</div>
 					<div class="d-flex justify-content-between align-items-center">
-						<p class="card-text mb-0 text-truncate text-muted"><span class="text-primary mr-1" v-if="isMe">Вы:</span>{{chat.messages[0] ? chat.messages[0].messageText : 'Нет сообщений'}}</p>
+						<p class="card-text mb-0 text-truncate text-muted"><span class="text-primary mr-1" v-if="isMe">Вы:</span>{{chat.messages.length ? chat.messages[chat.messages.length-1].messageText : 'Нет сообщений'}}</p>
 						<span class="badge badge-pill badge-primary ml-1" v-if="chat.newMessageCount">{{chat.newMessageCount}}</span>
 					</div>
 				</div>
@@ -36,7 +36,6 @@ export default {
 	},
 	beforeUpdate() {
 		this.checkIfMe();
-		console.log(this.chat.messages[0].messageText);
 	},
 	methods: {
 		openMessages() {
@@ -48,10 +47,12 @@ export default {
 			});
 		},
 		checkIfMe() {
-			if (this.chat.messages[0].senderId) {
-				this.isMe = this.chat.messages[0].senderId !== this.chat.mate.userId;
+			let messages = this.chat.messages;
+			if (messages.length === 0) return this.isMe = false;
+			if (messages[messages.length - 1].senderId) {
+				this.isMe = messages[messages.length - 1].senderId !== this.chat.mate.userId;
 			} else {
-				this.isMe = this.chat.messages[0].sender.userId !== this.chat.mate.userId;
+				this.isMe = messages[messages.length - 1].sender.userId !== this.chat.mate.userId;
 			}
 		}
 	}

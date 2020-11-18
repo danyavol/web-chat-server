@@ -1,12 +1,12 @@
 <template>
 	<div id="app">
-		<div class="container-lg vh-100 d-flex flex-column">
+		<div class="container-lg vh-100 d-flex flex-column" style="min-width: 600px">
 			<div class="row header position-relative">
 				<div class="col d-flex align-items-center">
 					<span class="logo ml-2">
 						<Logo />
 					</span>
-					<p>Мессенджер</p>
+					<p>Жывеграм</p>
 				</div>
 				<div class="d-flex align-items-center mr-3">
 					<button type="button" class="btn hb" @click="openSettingsBtn">Настройки</button>
@@ -14,12 +14,13 @@
 				</div>
 			</div>
 			<div class="row flex-grow-1 bg-light">
-				<component class="col-4" v-bind:is="secondaryComponent" v-bind="secondaryProps" v-bind:notifications="notifications"
+				<component class="col-4" :is="secondaryComponent" v-bind="secondaryProps" :chats="chats" :isLoading="isChatsLoading"
 					@openMessages="openMessages"
 					@openNewChat="openNewChat"
 					@openChatList="openChatList"/>
 
-				<component class="col-8" v-bind:is="mainComponent" v-bind="mainProps" @newMessage="newMessage"/>
+				<component class="col-8" :is="mainComponent" v-bind="mainProps" :chats="chats" :isLoading="isChatsLoading"
+					@newMessage="newMessage"/>
 			</div>
 		</div>
 	</div>
@@ -42,13 +43,18 @@
 			return {
 				mainComponent: 'Empty',
 				mainProps: null,
+
 				secondaryComponent: 'ChatList',
 				secondaryProps: null,
+
+				isChatsLoading: true,
 				notifications: [],
+				chats: [],
 				notificationInterval: null
 			}
 		},
 		beforeMount() {
+			this.getAllChats();
 			this.checkNotifications();
 			this.notificationInterval = setInterval(this.checkNotifications, 500);
 		},
@@ -56,12 +62,6 @@
 			logout() {
 				clearInterval(this.notificationInterval);
 				localStorage.clear();
-				// localStorage.removeItem('uuid');
-				// localStorage.removeItem('userId');
-				// localStorage.removeItem('login');
-				// localStorage.removeItem('name');
-				// localStorage.removeItem('colorScheme');
-				// localStorage.removeItem('friends');
 				this.$router.push('/auth');
 			},
 			openMessages(data) {
@@ -86,14 +86,101 @@
 			newMessage(message) {
 				this.secondaryProps = {newMessage: message};
 			},
+			getAllChats() {
+				this.axios.get(this.$root.url+'chats/getAll', {params: {uuid: localStorage.getItem('uuid')}})
+					.then(response => {
+						if (!response.data.error) {
+							let friends = [];
+							for (let i = 0; i < response.data.length; i++) {
+								friends.push(response.data[i].mate.userId);
+								this.$set(this.chats, i, response.data[i]);
+							}
+							localStorage.setItem('friends', JSON.stringify(friends));
+						} else {
+							// Неверный id, кто-то изменил localStorage
+							location.reload();
+						}
+					});
+			},
 			checkNotifications() {
 				axios.get(this.$root.url+'chats/checkNotifications', {params: {uuid: localStorage.getItem('uuid')}})
 				.then(response => {
-					if (response.data) {
-						this.notifications = response.data;
+					// let start = new Date();
+					if (response.data && this.chats.length !== 0) {
+
+						let no = response.data;
+						// Перебор всех уведомлений
+						for (let i = 0; i < no.length; i++) {
+							for (let j = 0; j < this.chats.length; j++) {
+								// Чат найден
+								if (no[i].chatId === this.chats[j].chatId) {
+									let newChat;
+
+									// Взаимное удаление deletedMsg и newMsg
+									if (no[i].newMsg && no[i].deletedMsg) {
+										for (let a = 0; a < no[i].newMsg.length; a++) {
+											for (let b = 0; b < no[i].deletedMsg.length; b++) {
+												if (no[i].newMsg[a].messageId === no[i].deletedMsg[b].messageId) {
+													no[i].newMsg.splice(a, 1);
+													a--;
+													break;
+												}
+											}
+										}
+									}
+
+									// Определение даты последнего сообщения
+									let lmDate;
+									if (this.chats[j].messages && this.chats[j].messages.length !== 0) {
+										lmDate = (new Date(this.chats[j].messages[this.chats[j].messages.length - 1].sendTime)).getTime();
+									}
+
+									// Добавление новых сообщений
+									for (let newMsg of no[i].newMsg) {
+										if (!lmDate || (new Date(newMsg.sendTime)).getTime() > lmDate) {
+											!newChat ? newChat = JSON.parse(JSON.stringify(this.chats[j])) : null;
+											newChat.messages.push(newMsg);
+										}
+									}
+
+									// Удаление удалённых сообщений
+									for (let deletedMsg of no[i].deletedMsg) {
+										for (let k = this.chats[j].messages.length-1; k >= 0; k--) {
+											if (this.chats[j].messages[k].messageId === deletedMsg.messageId) {
+												!newChat ? newChat = JSON.parse(JSON.stringify(this.chats[j])) : null;
+												newChat.messages.splice(k, 1);
+												break;
+											} else if (this.chats[j].messages[k].messageId > deletedMsg.messageId) {
+												break;
+											}
+										}
+									}
+
+									// Изменение количества новых сообщений
+									let newMessagesCount = no[i].newMsg.length;
+									if (this.chats[j].newMessageCount == null || this.chats[j].newMessageCount !== newMessagesCount) {
+										!newChat ? newChat = JSON.parse(JSON.stringify(this.chats[j])) : null;
+										newChat.newMessageCount = newMessagesCount;
+									}
+
+									if (newChat) {
+										this.$set(this.chats, j, newChat);
+										console.log(newChat);
+										console.log('-------------- State changed! --------------');
+									}
+
+								}
+								// Конец Чат найден
+							}
+						}
+						this.isChatsLoading = false;
+
 					}
+
+					// let end = new Date();
+					// console.log('checkNotifications took '+(end.getTime()-start.getTime())+'ms');
 				});
-			}
+			},
 		},
 		components: {
 			ChatList,
