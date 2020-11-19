@@ -44,13 +44,14 @@
 			return {
 				mainComponent: 'Empty',
 				mainProps: null,
+				tempMainProps: null,
 
 				secondaryComponent: 'ChatList',
 				secondaryProps: null,
 
 				isChatsLoading: true,
 				notifications: [],
-				chats: [],
+				chats: null,
 				notificationInterval: null
 			}
 		},
@@ -70,11 +71,15 @@
 				this.mainComponent = "Messages";
 			},
 			openSettingsBtn() {
-				if (this.mainComponent === "Settings" && this.mainProps == null) {
+				if (this.mainComponent === "Settings" && this.tempMainProps == null) {
 					this.mainComponent = "Empty";
 				} else if (this.mainComponent === "Settings") {
+					this.mainProps = this.tempMainProps;
+					this.tempMainProps = null;
 					this.mainComponent = "Messages";
-				}else {
+				} else {
+					this.tempMainProps = this.mainProps;
+					this.mainProps = null;
 					this.mainComponent = "Settings";
 				}
 			},
@@ -82,6 +87,7 @@
 				this.secondaryComponent = "NewChat";
 			},
 			openChatList() {
+				this.getAllChats();
 				this.secondaryComponent = "ChatList";
 			},
 			newMessage(message) {
@@ -106,11 +112,20 @@
 					}
 				}
 			},
+			clearNotifications(chatId) {
+				this.axios.get(this.$root.url+'chats/clearNotifications', {params: {uuid: localStorage.getItem('uuid'), chatId: chatId}})
+					.then(response => {
+						if (response.data.error) {
+							location.reload();
+						}
+					});
+			},
 			getAllChats() {
 				this.axios.get(this.$root.url+'chats/getAll', {params: {uuid: localStorage.getItem('uuid')}})
 					.then(response => {
 						if (!response.data.error) {
 							let friends = [];
+							this.chats = [];
 							for (let i = 0; i < response.data.length; i++) {
 								friends.push(response.data[i].mate.userId);
 								this.$set(this.chats, i, response.data[i]);
@@ -126,7 +141,7 @@
 				axios.get(this.$root.url+'chats/checkNotifications', {params: {uuid: localStorage.getItem('uuid')}})
 				.then(response => {
 					// let start = new Date();
-					if (response.data && this.chats.length !== 0) {
+					if (response.data && this.chats) {
 
 						let no = response.data;
 						// Перебор всех уведомлений
@@ -183,12 +198,18 @@
 										newChat.newMessageCount = newMessagesCount;
 									}
 
+									// Очистка уведомлений, если открыт чат
+									if (this.mainProps && this.mainProps.chatId === no[i].chatId) {
+										!newChat ? newChat = JSON.parse(JSON.stringify(this.chats[j])) : null;
+										newChat.newMessageCount = 0;
+										this.clearNotifications(this.mainProps.chatId);
+									}
+
 									if (newChat) {
 										this.$set(this.chats, j, newChat);
 										// console.log(newChat);
 										// console.log('-------------- State changed! --------------');
 									}
-
 								}
 								// Конец Чат найден
 							}
