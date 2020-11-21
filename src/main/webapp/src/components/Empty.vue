@@ -15,8 +15,8 @@
 					c0,1.616-2.638,3.419-6.424,3.419C17.65,21.309,16.239,20.954,15.148,20.435z"/>
 			</g>
 		</svg>
-		<p class="text-secondary text-center position-absolute" style="bottom: 0; width: 300px; left: Calc(50% - 150px); font-size: 0.875rem; letter-spacing: 1px;">
-			Разработал<font-awesome-icon :icon="['fas', 'code']" class="text-secondary mx-2"/>Волосюк Даниил
+		<p class="secondary-text text-center position-absolute" style="bottom: 0; width: 300px; left: Calc(50% - 150px); font-size: 0.875rem; letter-spacing: 1px;">
+			Разработал<font-awesome-icon :icon="['fas', 'code']" class="secondary-text mx-2"/>Волосюк Даниил
 		</p>
 	</div>
 

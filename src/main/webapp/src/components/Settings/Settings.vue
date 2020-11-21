@@ -1,6 +1,6 @@
 <template>
-	<div class="p-0 position-relative">
-		<div class="settings-top bg-white p-2 border-bottom d-flex align-items-center" style="height: 60px">
+	<div class="p-0 position-relative main-component">
+		<div class="settings-top p-2 d-flex align-items-center" style="height: 60px">
 			<div class="d-flex align-items-center">
 				<span class="avatar ml-3" :class="'color'+colorScheme">{{name[0]}}</span>
 				<span class="ml-3">@{{ login }}</span>
@@ -74,9 +74,25 @@
 
 				</form>
 			</div>
+			<div class="card card-body mt-3">
+				<div class="row">
+					<div class="col">
+						<h5 class="mb-0">Изменить тему</h5>
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					<div class="col text-center">
+						<span>Темная тема</span>
+						<input type="checkbox" id="switch" class="mx-3" name="theme" />
+						<span>Свободная тема</span>
+					</div>
+				</div>
+
+			</div>
 		</div>
-		<p class="text-secondary text-center position-absolute" style="bottom: 0; width: 300px; left: Calc(50% - 150px); font-size: 0.875rem; letter-spacing: 1px;">
-			Разработал<font-awesome-icon :icon="['fas', 'code']" class="text-secondary mx-2"/>Волосюк Даниил
+		<p class="secondary-text text-center position-absolute" style="bottom: 0; width: 300px; left: Calc(50% - 150px); font-size: 0.875rem; letter-spacing: 1px;">
+			Разработал<font-awesome-icon :icon="['fas', 'code']" class="secondary-text mx-2"/>Волосюк Даниил
 		</p>
 	</div>
 </template>
@@ -207,8 +223,14 @@ export default {
 </script>
 
 <style lang="scss">
+	.card {
+		background-color: var(--card-bg);
+		color: var(--primary-text);
+	}
 	.settings-top {
 		box-shadow: 0px 10px 10px -10px rgba(34, 60, 80, 0.1);
+		background-color: var(--card-bg);
+		border-bottom: 1px solid var(--border);
 	}
 
 	#settingsAlert  {

@@ -1,5 +1,5 @@
 <template>
-	<div class="border-right p-0 d-flex flex-column">
+	<div class="sec-component p-0 d-flex flex-column">
 		<div class="chatList-top d-flex align-items-center pl-4 justify-content-between">
 			<span class="h5 mb-0">Сообщения</span>
 			<span class="mr-3 p-2 addChat" @click="openNewChat">
@@ -82,9 +82,12 @@ export default {
 </script>
 
 <style lang="scss">
+	.sec-component {
+		border-right: 1px solid var(--border);
+	}
 	.chatList-top {
-		background: white;
-		border-bottom: 1px solid #dee2e6;
+		background: var(--card-bg);
+		border-bottom: 1px solid var(--border);
 		height: 60px;
 		position: relative;
 		z-index: 15;

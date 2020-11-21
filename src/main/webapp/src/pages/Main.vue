@@ -13,7 +13,7 @@
 					<button type="button" class="btn hb" @click="logout">Выйти</button>
 				</div>
 			</div>
-			<div class="row flex-grow-1 bg-light">
+			<div class="row flex-grow-1 main-container">
 				<component class="col-4" :is="secondaryComponent" v-bind="secondaryProps" :chats="chats" :isLoading="isChatsLoading"
 					@openMessages="openMessages"
 					@openNewChat="openNewChat"
@@ -256,18 +256,24 @@
 	}
 
 	#app {
-		background: #e9e9eb;
+		background: var(--bg);
 		font-family: cursive;
 		font-size: 16px;
 		z-index: 15;
 	}
 
+	.main-container {
+		background-color: var(--container-bg);
+	}
+
 	.header {
-		background: #ef4b4c; // цвет хедера сверху
+		background: var(--header-bg); // цвет хедера сверху
+		color: var(--header-text);
 		height: 40px;
 
 		.logo {
 			width: 30px;
+			fill: var(--header-text);
 		}
 
 		p {
@@ -275,13 +281,12 @@
 			margin-left: 40px;
 			font-size: 1.5em;
 			display: inline;
-			color: white;
 		}
 		.hb {
 			height: 100%;
 			background: transparent;
-			color: white;
 			border-radius: 0;
+			color: var(--header-text);
 
 			&:hover {
 				background: rgba(255,255,255,0.3);
