@@ -1,5 +1,5 @@
 <template>
-		<div class="container bg-light p-0 position-relative d-flex flex-column" >
+		<div class="container main-component p-0 position-relative d-flex flex-column" >
 
 			<div class="msg-container-header p-2 d-flex align-items-center flex-row">
 				<span class="avatar ml-3" :class="'color'+mateColor">{{this.mateName[0]}}</span>
@@ -10,7 +10,7 @@
 			<div id="msg-container" class="overflow-auto position-relative flex-grow-1 mx-0" >
 				<Loading v-if="messages == null" />
 				<div class="position-absolute d-flex flex-column msg-wrapper px-3" v-if="messages != null">
-					<p class="text-center text-secondary" v-if="messages.length === 0">Нет сообщений</p>
+					<p class="text-center secondary-text" v-if="messages.length === 0">Нет сообщений</p>
 					<Message v-bind:key="item.messageId" v-for="item in messages" v-bind:msg="item" v-bind:mateName="mateName" @delMsg="deleteMessage"/>
 					<Message v-bind:key="index" v-for="(item, index) in localMessages" v-bind:localMsg="item" v-bind:mateName="mateName"/>
 				</div>
@@ -19,7 +19,7 @@
 			<div class="msg-container-bottom py-3">
 				<div class="d-flex ">
 					<div style="width: calc(100% - 145px)" class="pl-3">
-						<div contenteditable="true" id="message-input" class="text-secondary" @keypress="keyPress" @focusin="inputFocusIn" @focusout="inputFocusOut" placeholder="Напишите сообщение...">Напишите сообщение...</div>
+						<div contenteditable="true" id="message-input" class="secondary-text" @keypress="keyPress" @focusin="inputFocusIn" @focusout="inputFocusOut" placeholder="Напишите сообщение...">Напишите сообщение...</div>
 					</div>
 					<div style="min-width: 145px" class="px-3">
 						<input type="button" class="btn btn-outline-primary w-100" value="Отправить" @click="sendMessage">
@@ -125,13 +125,13 @@
 			inputFocusIn(e) {
 				if(e.target.innerText === e.target.getAttribute('placeholder')) {
 					e.target.innerText = '';
-					e.target.classList.remove('text-secondary');
+					e.target.classList.remove('secondary-text');
 				}
 			},
 			inputFocusOut(e) {
 				if(e.target.innerText === '') {
 					e.target.innerText = e.target.getAttribute('placeholder');
-					e.target.classList.add('text-secondary');
+					e.target.classList.add('secondary-text');
 				}
 
 			}
@@ -145,30 +145,35 @@
 
 <style lang="scss">
 
+	.main-component {
+		background-color: var(--container-bg);
+	}
+
 	#message-input {
-		border: 1px solid #dee2e6;
+		border: 1px solid var(--border);
 		border-radius: 5px;
 		padding: 5px 20px;
 		width: 100%;
 		max-height: 300px;
 		overflow: auto;
+		color: var(--secondary-text);
 
 		&:focus {
-			border: 1px solid #6c757d;
+			border: 1px solid var(--secondary-text);
 			outline: 0;
 		}
 	}
 
 	.msg-container-header {
-		border-bottom: 1px solid #dee2e6;
-		background: white;
+		border-bottom: 1px solid var(--border);
+		background: var(--card-bg);
 		box-shadow: 0px 10px 10px -10px rgba(34, 60, 80, 0.1);
 		z-index: 1;
 		height: 60px;
 	}
 	.msg-container-bottom {
-		border-top: 1px solid #dee2e6;
-		background: white;
+		border-top: 1px solid var(--border);
+		background: var(--card-bg);
 		box-shadow: 0px -10px 10px -10px rgba(34, 60, 80, 0.1);
 		z-index: 1;
 	}

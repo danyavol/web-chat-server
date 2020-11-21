@@ -10,7 +10,7 @@
 						<p class="card-title mb-0 mate"><span>@{{this.user.login}}</span><strong class="pl-2">{{this.user.name}}</strong></p>
 						<span class="mr-2 addNewChat p-2" @click="addNewChat">
 							<font-awesome-icon icon="plus" class="fa-lg" v-if="!loading"/>
-							<div class="spinner-border text-success" role="status" v-if="loading">
+							<div class="spinner-border" role="status" v-if="loading">
 								<span class="sr-only">Loading...</span>
 							</div>
 						</span>
@@ -55,6 +55,8 @@ export default {
 <style lang="scss">
 	.newChat_item {
 		margin-bottom: 10px;
+		background-color: var(--card-bg);
+		color: var(--primary-text);
 
 		&:last-child {
 			margin-bottom: 0;
@@ -64,11 +66,11 @@ export default {
 	.addNewChat {
 		cursor: pointer;
 		transition-duration: 0.2s;
-		color: #8fd19e;
+		color: var(--new-chat-button);
 
 		&:hover {
 			transition-duration: 0.2s;
-			color: #28a745;
+			color: var(--new-chat-button-hover);
 		}
 
 		.spinner-border {
