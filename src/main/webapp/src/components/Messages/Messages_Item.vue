@@ -1,8 +1,8 @@
 <template>
-		<div class="msg_item card w-75 shadow-sm" v-bind:class="{'ml-auto': this.isMe}">
+		<div class="msg_item card w-75 shadow-sm" v-bind:class="{'ml-auto my-msg': this.isMe}">
 			<div class="card-body p-2">
 				<div class="msg_header mb-2 d-flex justify-content-between">
-					<p class="text-secondary mb-0">{{mateName}}</p>
+					<p class="text-secondary mb-0">{{this.isMe ? myName : mateName}}</p>
 					<div class="d-flex align-items-center">
 						<span class="text-secondary text-sm" v-if="!isLoading">{{this.$root.getDate(obj.sendTime)}}</span>
 						<div class="spinner-border spinner-border-sm messageLoading text-secondary" v-if="isLoading" role="status">
@@ -33,12 +33,13 @@
 				obj: {},
 				isMe: true,
 				isLoading: false,
+				myName: '',
 				timeoutShow: setTimeout(()=>{}, 0),
 				timeoutDisplay: setTimeout(()=>{}, 0)
 			}
 		},
 		beforeMount() {
-
+			this.myName = localStorage.getItem('name');
 			if (this.localMsg == null) {
 				this.obj = this.msg;
 				this.isMe = localStorage.getItem('userId') === this.obj.sender.userId;
@@ -79,6 +80,9 @@
 </script>
 
 <style lang="scss">
+	.my-msg {
+		background-color: #fff7f7;
+	}
 	.msg_item {
 		//box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 		margin-bottom: 10px;
