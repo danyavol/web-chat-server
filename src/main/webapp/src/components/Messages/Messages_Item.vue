@@ -81,10 +81,11 @@
 
 <style lang="scss">
 	.my-msg {
-		background-color: #fff7f7;
+		background-color: #ffe9e9 !important;
 	}
 	.msg_item {
 		//box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+		background-color: #fffafa;
 		margin-bottom: 10px;
 
 		.msg_content pre{
