@@ -8,6 +8,7 @@ import com.danvol.webchat.mongo.entity.*;
 import com.danvol.webchat.mongo.repository.ChatsRepository;
 import com.danvol.webchat.mongo.repository.UsersRepository;
 import com.danvol.webchat.session.Session;
+import com.danvol.webchat.session.UserSession;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ public class ChatsServiceImpl implements ChatsService {
         if (userA == null)
             return new ResponseEntity<>(new RequestException("Неверный id пользователя"), HttpStatus.OK);
         if (userB == null)
-            return new ResponseEntity<>(new RequestException("Пользователь с таким логином не найден"), HttpStatus.OK);
+            return new ResponseEntity<>(new RequestException("Пользователь с таким id не найден"), HttpStatus.OK);
 
         // Создание списка пользователей для класса Chat
         List<ChatUser> chatUsers = new ArrayList<>();
@@ -47,6 +48,8 @@ public class ChatsServiceImpl implements ChatsService {
             // Если чат не найден, создаем новый
             chat = chatsRepository.save( new Chat(chatUsers) );
         }
+
+        Session.addNewChat(userB.getUuid(), new ChatDto(chat, userA, "createChat"));
 
         return new ResponseEntity<>(new ChatDto(chat, userB, "createChat"), HttpStatus.OK);
     }
@@ -205,13 +208,12 @@ public class ChatsServiceImpl implements ChatsService {
 
     @Override
     public ResponseEntity checkNotifications(String uuid) {
-        List<Notification> notifications;
+        UserSession notifications;
         try {
             notifications = Session.getUser(uuid);
         } catch (Exception e) {
             return new ResponseEntity<>(new RequestException("Пользователь не найден"), HttpStatus.OK);
         }
-
         return new ResponseEntity<>(notifications, HttpStatus.OK);
     }
 

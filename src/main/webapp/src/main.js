@@ -123,7 +123,7 @@ function getDate(dateStr) {
 			case '11': month = 'ноя'; break;
 			case '12': month = 'дек'; break;
 		}
-		output = date + ' ' + month + ' ' + hours + ':' + minutes;
+		output = date + '.' + month + ' ' + hours + ':' + minutes;
 	} else {
 		// Дата + год
 		let date = msgDate.getDate();
