@@ -1,7 +1,7 @@
 <template>
 	<div class="sec-component p-0 d-flex flex-column">
 		<div class="chatList-top d-flex align-items-center pl-4 justify-content-between">
-			<span class="h5 mb-0">Сообщения</span>
+			<span class="h5 mb-0 primary-text">Сообщения</span>
 			<span class="mr-3 p-2 addChat" @click="openNewChat">
 				<font-awesome-icon icon="user-plus" class="fa-lg"/>
 			</span>

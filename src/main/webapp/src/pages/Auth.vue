@@ -1,5 +1,5 @@
 <template>
-	<div class="bg-light">
+	<div>
 		<div class="container vh-100 d-flex justify-content-center align-items-center">
 			<div class="card w-100" style="max-width: 450px">
 				<div class="card-title mb-0 border-bottom">

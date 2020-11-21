@@ -6,7 +6,14 @@
 
 <script>
 	export default {
-		name: 'App'
+		name: 'App',
+		beforeMount() {
+			if (localStorage.getItem('theme') === 'dark') {
+				document.documentElement.setAttribute('data-theme', 'dark');
+			} else {
+				document.documentElement.setAttribute('data-theme', 'light');
+			}
+		}
 	}
 </script>
 
@@ -30,25 +37,33 @@ html {
 }
 
 html[data-theme='dark'] {
-	--bg: #20724d;
-	--container-bg: #3ca978;
-	--header-bg: #983140;
-	--header-text: #f5dd6f;
-	--card-bg: #48b8a7;
-	--primary-text: #f5dd6f;
-	--secondary-text: #c1b474;
+	--bg: #222222;
+	--container-bg: #121212;
+	--header-bg: #902f30;
+	--header-text: #e3e3e3;
+	--card-bg: #1e1e1e;
+	--primary-text: #e3e3e3;
+	--secondary-text: #797979;
 	--primary-text2: #f8ad16;
 	--button-bg: #3ca978;
 	--button-text: #f5dd6f;
-	--border: #000000;
-	--new-chat-button: #dd0e0e;
-	--new-chat-button-hover: #c31273;
-	--mate-msg-bg: #46e72a;
-	--my-msg-bg: #2d9d0e;
+	--border: #383838;
+	--new-chat-button: #8fd19e;
+	--new-chat-button-hover: #28a745;
+	--mate-msg-bg: #383838;
+	--my-msg-bg: #323232;
+}
+
+body {
+	background-color: var(--bg) !important;
 }
 
 .secondary-text {
 	color: var(--secondary-text);
+}
+
+.primary-text {
+	color: var(--primary-text);
 }
 
 .primary-text2 {

@@ -1,7 +1,7 @@
 <template>
 	<div class="p-0 position-relative main-component">
 		<div class="settings-top p-2 d-flex align-items-center" style="height: 60px">
-			<div class="d-flex align-items-center">
+			<div class="d-flex align-items-center primary-text">
 				<span class="avatar ml-3" :class="'color'+colorScheme">{{name[0]}}</span>
 				<span class="ml-3">@{{ login }}</span>
 				<strong class="ml-2">{{ name }}</strong>
@@ -13,7 +13,7 @@
 				<form>
 					<div class="row">
 						<div class="col">
-							<h5 class="mb-0">Изменить профиль</h5>
+							<h5 class="mb-0 primary-text">Изменить профиль</h5>
 						</div>
 						<div class="col text-right">
 							<div id="settingsAlert" :class="alertClass">{{alertText}}</div>
@@ -24,7 +24,7 @@
 					<hr>
 
 					<div class="row mb-2 align-items-center">
-						<div class="col-3 col-lg-2">Аватар</div>
+						<div class="col-3 col-lg-2 primary-text">Аватар</div>
 						<div class="col">
 							<div class="d-flex avatar-select-container flex-wrap">
 							<span v-for="n in 8" :key="n"
@@ -37,7 +37,7 @@
 					</div>
 
 					<div class="row mb-2 align-items-center">
-						<div class="col-3 col-lg-2">Имя</div>
+						<div class="col-3 col-lg-2 primary-text">Имя</div>
 						<div class="col">
 							<input type="text" class="form-control" id="settingsName" placeholder="Имя" :value="name">
 							<div class="invalid-feedback">
@@ -47,7 +47,7 @@
 					</div>
 
 					<div class="row mb-2 align-items-center">
-						<div class="col-3 col-lg-2">Логин</div>
+						<div class="col-3 col-lg-2 primary-text">Логин</div>
 						<div class="col">
 							<input type="text" class="form-control" id="settingsLogin" placeholder="Логин" :value="login">
 							<div class="invalid-feedback">
@@ -57,7 +57,7 @@
 					</div>
 
 					<div class="row align-items-center">
-						<div class="col-3 col-lg-2">Пароль</div>
+						<div class="col-3 col-lg-2 primary-text">Пароль</div>
 						<div class="col">
 							<input type="password" class="form-control" id="settingsPassword" placeholder="Новый пароль">
 							<div class="invalid-feedback">
@@ -77,15 +77,15 @@
 			<div class="card card-body mt-3">
 				<div class="row">
 					<div class="col">
-						<h5 class="mb-0">Изменить тему</h5>
+						<h5 class="mb-0 primary-text">Изменить тему</h5>
 					</div>
 				</div>
 				<hr>
 				<div class="row">
 					<div class="col text-center">
-						<span>Темная тема</span>
-						<input type="checkbox" id="switch" class="mx-3" name="theme" />
-						<span>Свободная тема</span>
+						<span class="primary-text">Темная тема</span>
+						<input type="checkbox" id="switch" class="mx-3 switch" name="theme" :checked="!darkTheme" />
+						<span class="primary-text">Свободная тема</span>
 					</div>
 				</div>
 
@@ -106,12 +106,14 @@ export default {
 			name: null,
 			colorScheme: null,
 			isLoading: false,
+			darkTheme: false,
 
 			alertText: '',
 			alertClass: ''
 		}
 	},
 	beforeMount() {
+		localStorage.getItem('theme') === 'dark' ? this.darkTheme = true : this.darkTheme = false;
 		this.login = localStorage.getItem('login');
 		this.name = localStorage.getItem('name');
 		this.colorScheme = localStorage.getItem('colorScheme');
@@ -181,6 +183,28 @@ export default {
 				form[f].elem.classList.add('is-invalid');
 			}
 		}
+
+		// Смена темы
+		let checkbox = document.querySelector('#switch');
+
+		checkbox.addEventListener('change', function() {
+			if(!this.checked) {
+				trans()
+				document.documentElement.setAttribute('data-theme', 'dark');
+				localStorage.setItem('theme', 'dark');
+			} else {
+				trans()
+				document.documentElement.setAttribute('data-theme', 'light')
+				localStorage.setItem('theme', 'light');
+			}
+		})
+
+		let trans = () => {
+			document.documentElement.classList.add('transition');
+			window.setTimeout(() => {
+				document.documentElement.classList.remove('transition')
+			}, 1000)
+		}
 	},
 	methods: {
 		saveProfile() {
@@ -223,6 +247,14 @@ export default {
 </script>
 
 <style lang="scss">
+	html.transition,
+	html.transition *,
+	html.transition *:before,
+	html.transition *:after {
+		transition: all 750ms !important;
+		transition-delay: 0s !important;
+	}
+
 	.card {
 		background-color: var(--card-bg);
 		color: var(--primary-text);
