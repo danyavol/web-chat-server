@@ -135,8 +135,8 @@
 							}
 							localStorage.setItem('friends', JSON.stringify(friends));
 						} else {
-							// Неверный id, кто-то изменил localStorage
-							location.reload();
+							// Неверный uuid
+							this.$router.push('/auth');
 						}
 					});
 			},
@@ -265,7 +265,7 @@
 	}
 
 	.header {
-		background: var(--header-bg); // цвет хедера сверху
+		background: var(--header-bg);
 		color: var(--header-text);
 		height: 40px;
 

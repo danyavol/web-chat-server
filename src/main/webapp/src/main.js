@@ -22,13 +22,10 @@ import Main from './pages/Main';
 import Auth from './pages/Auth';
 import Register from './pages/Register';
 
-// Install BootstrapVue
-Vue.use(BootstrapVue)
-// Optionally install the BootstrapVue icon components plugin
-Vue.use(IconsPlugin)
-// Router
+
+Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
 Vue.use(VueRouter);
-// Axios
 Vue.use(VueAxios, axios);
 
 // url сервера

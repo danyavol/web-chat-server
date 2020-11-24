@@ -54,6 +54,18 @@
 		beforeMount() {
 			this.updateMessages();
 		},
+		mounted() {
+			document.getElementById('message-input').addEventListener('paste', (event) => {
+				let paste = (event.clipboardData || window.clipboardData).getData('text');
+
+				const selection = window.getSelection();
+				if (!selection.rangeCount) return false;
+				selection.deleteFromDocument();
+				selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+
+				event.preventDefault();
+			});
+		},
 		watch: {
 			chatId() {
 				this.updateMessages();
@@ -87,7 +99,10 @@
 			sendMessage() {
 				let input = document.getElementById('message-input');
 				if (input.innerText !== input.getAttribute('placeholder') && !input.innerText.match(/^\s*$/)) {
-					let localMsg = {messageText: input.innerText, sender: {name: localStorage.getItem('name')}};
+					let localMsg = {
+						messageText: this.removeUnnecessarySymbols(input.innerText),
+						sender: { name: localStorage.getItem('name') }
+					};
 
 					let localMsgId = this.localMessageCounter++;
 					this.$set(this.localMessages, 'i'+localMsgId, localMsg);
@@ -101,7 +116,8 @@
 
 								this.$emit('newMessage', {chatId: this.chatId, message: response.data});
 							} else {
-								location.reload();
+								console.log(response.data.error);
+								// location.reload();
 							}
 						});
 				}
@@ -115,6 +131,16 @@
 							location.reload();
 						}
 					});
+			},
+			removeUnnecessarySymbols(msg) {
+				msg = msg.trim();
+
+				while (msg.includes('\n\n\n'))
+					msg = msg.replaceAll('\n\n\n', '\n\n');
+
+				msg.length > 1000 ? msg = msg.slice(0, 1000) : null;
+
+				return msg;
 			},
 			keyPress(e) {
 				if (!e.shiftKey && e.key === 'Enter') {
