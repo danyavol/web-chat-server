@@ -36,7 +36,6 @@ public class UserValidation {
 
         if (matcher.matches()) return password;
         else return "";
-
     }
 
 }

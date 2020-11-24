@@ -16,12 +16,6 @@ public class NotificationMessage {
     private BasicDBObject sender;
     private Date sendTime;
 
-//    public NotificationMessage(String senderId, String messageText) {
-//        this.messageText = messageText;
-//        this.sender.put("userId", senderId);
-//        this.sendTime = new Date();
-//    }
-
     public NotificationMessage(Message message) {
         this.messageId = message.getMessageId();
         this.messageText = message.getMessageText();

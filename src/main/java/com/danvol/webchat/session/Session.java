@@ -1,6 +1,5 @@
 package com.danvol.webchat.session;
 
-import com.danvol.webchat.mongo.entity.Message;
 import com.danvol.webchat.mongo.entity.Notification;
 import com.danvol.webchat.mongo.entity.User;
 

@@ -80,7 +80,6 @@
 
 <style lang="scss">
 	.msg_item {
-		//box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 		margin-bottom: 10px;
 
 		.msg_content pre{
