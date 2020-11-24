@@ -52,6 +52,7 @@
 				isChatsLoading: true,
 				notifications: [],
 				chats: null,
+				newChatsTemp: [],
 				notificationInterval: null
 			}
 		},
@@ -140,9 +141,9 @@
 			checkNotifications() {
 				axios.get(this.$root.url+'chats/checkNotifications', {params: {uuid: localStorage.getItem('uuid')}})
 				.then(response => {
-					if (response.data && this.chats) {
+					if (response.data && response.data.notifications && this.chats) {
 
-						let no = response.data;
+						let no = response.data.notifications;
 						// Перебор всех уведомлений
 						for (let i = 0; i < no.length; i++) {
 							for (let j = 0; j < this.chats.length; j++) {
@@ -215,6 +216,17 @@
 						this.isChatsLoading = false;
 
 					}
+					// Появление нового чата в списке чатов
+					if (response.data.newChats.length > 0) {
+						this.newChatsTemp = response.data.newChats;
+						if (this.chats) {
+							for (let newChat of this.newChatsTemp) {
+								this.$set(this.chats, this.chats.length, newChat);
+							}
+							this.newChatsTemp = null;
+						}
+					}
+
 				});
 			},
 		},
