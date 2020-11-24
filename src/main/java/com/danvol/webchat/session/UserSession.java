@@ -1,10 +1,8 @@
 package com.danvol.webchat.session;
 
 import com.danvol.webchat.dto.ChatDto;
-import com.danvol.webchat.mongo.entity.Message;
 import com.danvol.webchat.mongo.entity.Notification;
 import com.danvol.webchat.mongo.entity.User;
-import com.mongodb.BasicDBList;
 import lombok.Data;
 
 import java.util.ArrayList;

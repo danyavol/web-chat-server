@@ -143,7 +143,6 @@
 			checkNotifications() {
 				axios.get(this.$root.url+'chats/checkNotifications', {params: {uuid: localStorage.getItem('uuid')}})
 				.then(response => {
-					// let start = new Date();
 					if (response.data && response.data.notifications && this.chats) {
 
 						let no = response.data.notifications;
@@ -208,10 +207,9 @@
 										this.clearNotifications(this.mainProps.chatId);
 									}
 
+									// Обновление чата, если есть изменения
 									if (newChat) {
 										this.$set(this.chats, j, newChat);
-										// console.log(newChat);
-										// console.log('-------------- State changed! --------------');
 									}
 								}
 								// Конец Чат найден
@@ -231,8 +229,6 @@
 						}
 					}
 
-					// let end = new Date();
-					// console.log('checkNotifications took '+(end.getTime()-start.getTime())+'ms');
 				});
 			},
 		},

@@ -84,9 +84,8 @@
 		background-color: var(--my-msg-bg) !important;
 	}
 	.msg_item {
-		//box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-		margin-bottom: 10px;
 		background-color: var(--mate-msg-bg);
+		margin-bottom: 10px;
 
 		.msg_content pre {
 			color: var(--primary-text);
