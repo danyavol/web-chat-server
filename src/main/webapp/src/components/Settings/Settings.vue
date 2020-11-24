@@ -39,7 +39,7 @@
 					<div class="row mb-2 align-items-center">
 						<div class="col-3 col-lg-2 primary-text">Имя</div>
 						<div class="col">
-							<input type="text" class="form-control" id="settingsName" placeholder="Имя" :value="name">
+							<input type="text" class="form-control" id="settingsName" placeholder="Имя" :value="name" autocomplete="off">
 							<div class="invalid-feedback">
 								С большой буквы, не менее 3-х символов.
 							</div>
@@ -49,7 +49,7 @@
 					<div class="row mb-2 align-items-center">
 						<div class="col-3 col-lg-2 primary-text">Логин</div>
 						<div class="col">
-							<input type="text" class="form-control" id="settingsLogin" placeholder="Логин" :value="login">
+							<input type="text" class="form-control" id="settingsLogin" placeholder="Логин" :value="login" autocomplete="off">
 							<div class="invalid-feedback">
 								Маленькие латинские буквы или цифры, не менее 4-х символов, первый символ не цифра.
 							</div>
@@ -59,7 +59,7 @@
 					<div class="row align-items-center">
 						<div class="col-3 col-lg-2 primary-text">Пароль</div>
 						<div class="col">
-							<input type="password" class="form-control" id="settingsPassword" placeholder="Новый пароль">
+							<input type="password" class="form-control" id="settingsPassword" placeholder="Новый пароль" autocomplete="off">
 							<div class="invalid-feedback">
 								Не менее 4-х латинский букв или цифр.
 							</div>

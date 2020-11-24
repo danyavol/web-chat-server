@@ -64,7 +64,9 @@
 		methods: {
 			logout() {
 				clearInterval(this.notificationInterval);
+				let theme = localStorage.getItem('theme');
 				localStorage.clear();
+				theme ? localStorage.setItem('theme', theme) : null;
 				this.$router.push('/auth');
 			},
 			openMessages(data) {
