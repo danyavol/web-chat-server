@@ -52,6 +52,28 @@ html[data-theme='dark'] {
 	--new-chat-button-hover: #28a745;
 	--mate-msg-bg: #383838;
 	--my-msg-bg: #323232;
+
+	hr {
+		border-top: 1px solid var(--border);
+	}
+
+	.form-control {
+		background-color: #373737;
+		color: var(--primary-text);
+		border: 1px solid var(--secondary-text);
+
+		&::placeholder {
+			color: var(--secondary-text);
+		}
+
+		&.is-valid {
+			border-color: #28a745;
+		}
+	}
+
+	.border-bottom {
+		border-bottom: 1px solid var(--border) !important;
+	}
 }
 
 body {
@@ -70,13 +92,13 @@ body {
 	color: var(--primary-text2);
 }
 
+
+
 .color1 {
 	/* Зеленый */
 	background-color: #88e69c;
 	color: #ffffff;
 }
-
-
 
 .color2 {
 	/* Салатовый */

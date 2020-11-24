@@ -10,21 +10,21 @@
 					<form>
 						<div class="form-group">
 							<label for="name">Имя</label>
-							<input type="text" class="form-control" id="name">
+							<input type="text" class="form-control" id="name" autocomplete="off">
 							<div class="invalid-feedback">
 								С большой буквы, не менее 3-х символов.
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="login">Логин</label>
-							<input type="text" class="form-control" id="login">
+							<input type="text" class="form-control" id="login" autocomplete="off">
 							<div class="invalid-feedback">
 								Маленькие латинские буквы или цифры, не менее 4-х символов, первый символ не цифра.
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="password">Пароль</label>
-							<input type="password" class="form-control" id="password">
+							<input type="password" class="form-control" id="password" autocomplete="off">
 							<div class="invalid-feedback">
 								Не менее 4-х латинский букв или цифр.
 							</div>

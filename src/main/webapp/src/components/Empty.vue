@@ -31,9 +31,12 @@
 		#logo {
 			width: 50%;
 			path {
-				fill: #fde0e0; //#e9e9eb;
+				fill: #fde0e0;
 			}
 		}
+	}
+	html[data-theme='dark'] .empty #logo path {
+		fill: #461e1e;
 	}
 
 
