@@ -56,12 +56,21 @@
 		},
 		mounted() {
 			document.getElementById('message-input').addEventListener('paste', (event) => {
-				let paste = (event.clipboardData || window.clipboardData).getData('text');
+				let paste = (event.clipboardData || window.clipboardData).getData('text').split('\n');
 
 				const selection = window.getSelection();
 				if (!selection.rangeCount) return false;
+
 				selection.deleteFromDocument();
-				selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+				for(let i = 0; i < paste.length; i++) {
+					selection.getRangeAt(0).insertNode(document.createTextNode(paste[i]));
+					selection.collapseToEnd();
+					if (i !== paste.length - 1) {
+						selection.getRangeAt(0).insertNode(document.createElement('br'));
+						selection.collapseToEnd();
+					}
+				}
+
 
 				event.preventDefault();
 			});
@@ -135,8 +144,8 @@
 			removeUnnecessarySymbols(msg) {
 				msg = msg.trim();
 
-				while (msg.includes('\n\n\n'))
-					msg = msg.replaceAll('\n\n\n', '\n\n');
+				while ( /\n{4}/.test(msg) )
+					msg = msg.replaceAll(/\n{4}/g, '\n\n\n');
 
 				msg.length > 1000 ? msg = msg.slice(0, 1000) : null;
 
