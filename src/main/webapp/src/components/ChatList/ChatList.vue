@@ -10,7 +10,7 @@
 		<div class="overflow-auto position-relative flex-grow-1 mx-0" >
 			<Loading v-if="isLoading"/>
 			<div class="chatList-wrapper position-absolute d-flex flex-column px-3 py-3" v-if="!isLoading" style="max-width: 100%">
-				<p class="text-center" v-if="chats && chats.length === 0">У вас нет диалогов</p>
+				<p class="secondary-text text-center" v-if="chats && chats.length === 0">У вас нет диалогов</p>
 				<ChatListItem v-bind:key="chat.chatId" v-for="chat in chats" v-bind:chat="chat" @openMessages="openMessages"/>
 			</div>
 		</div>
